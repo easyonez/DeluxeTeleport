@@ -1,0 +1,74 @@
+#====================================================================================#
+#      ____  __      __    ___  ____  _   _  _____  __    ____  ____  ____  ___      #
+#     (  _ \(  )    /__\  / __)( ___)( )_( )(  _  )(  )  (  _ \( ___)(  _ \/ __)     #
+#      )___/ )(__  /(__)\( (__  )__)  ) _ (  )(_)(  )(__  )(_) ))__)  )   /\__ \     #
+#     (__)  (____)(__)(__)\___)(____)(_) (_)(_____)(____)(____/(____)(_)\_)(___/     #
+#                                                                                    #
+# Here you can create the variables you want and that are compatible with            #
+# PlaceholderAPI. You can visit the documentation about variables here:              #
+# https://wiki.pixesoj.com/deluxeteleport/variables/placeholderapi                   #
+#                                                                                    #
+# You can find the built-in variables in DeluxeTeleport here:                        #
+# https://wiki.pixesoj.com/deluxeteleport/variables/internal-variables               #
+#                                                                                    #
+# If you would like any new features or need help let me know on my discord server:  #
+# https://discord.com/invite/gcGarEbbbb                                              #
+#====================================================================================#
+
+placeholders:
+  spawn_delay: "%spawn_delay%"
+  spawn_delay_formatted: "%spawn_delay_formatted%"
+  spawn_delay_time: "%spawn_delay_time%"
+  spawn_delay_time_formatted: "%spawn_delay_time_formatted%"
+  spawn_cooldown: "%spawn_cooldown%"
+  spawn_cooldown_formatted: "%spawn_cooldown_formatted%"
+  spawn_cooldown_time: "%spawn_cooldown_time%"
+  spawn_cooldown_time_formatted: "%spawn_cooldown_time_formatted%"
+
+  lobby_delay: "%lobby_delay%"
+  lobby_delay_formatted: "%lobby_delay_formatted%"
+  lobby_delay_time: "%lobby_delay_time%"
+  lobby_delay_time_formatted: "%lobby_delay_time_formatted%"
+  lobby_cooldown_time: "%lobby_cooldown_time%"
+  lobby_cooldown_time_formatted: "%lobby_cooldown_time_formatted%"
+
+  home_delay: "%home_delay%"
+  home_delay_formatted: "%home_delay_formatted%"
+  home_delay_time: "%home_delay_time%"
+  home_delay_time_formatted: "%home_delay_time_formatted%"
+  home_cooldown: "%home_cooldown%"
+  home_cooldown_formatted: "%home_cooldown_formatted%"
+  home_cooldown_time: "%home_cooldown_time%"
+  home_cooldown_time_formatted: "%home_cooldown_time_formatted%"
+  homes_set: "%homes_set%"
+  homes_max: "%homes_max%"
+  homes_max_formatted:
+    input: "%homes_max%"
+    matchs:
+      2147483647: 'Unlimited'
+      else: '%homes_max%'
+
+  tpa_delay: "%tpa_delay%"
+  tpa_delay_formatted: "%tpa_delay_formatted%"
+  tpa_delay_time: "%tpa_delay_time%"
+  tpa_delay_time_formatted: "%tpa_delay_time_formatted%"
+  tpa_cooldown: "%tpa_cooldown%"
+  tpa_cooldown_formatted: "%tpa_cooldown_formatted%"
+  tpa_cooldown_time: "%tpa_cooldown_time%"
+  tpa_cooldown_time_formatted: "%tpa_cooldown_time_formatted%"
+
+  # Example of Placeholders with conditions (%deluxeteleport_example_conditions%)
+  example_conditions:
+    # input is the variable being checked
+    input: "%deluxeteleport_spawn_cooldown_time%"
+    matchs:
+      # void represents when the variable returns empty
+      void: ''
+      # You can compare a value directly or you can also use expressions like "-", "!=", ">", "<" ">=", "<=", "==".
+      0: '&b0'
+      # This would represent when the cooldown is between 0 and 2
+      1-2: '&a%deluxeteleport_spawn_cooldown_time%'
+      3-5: '&e%deluxeteleport_spawn_cooldown_time%'
+      '>=6': '&c%deluxeteleport_spawn_cooldown_time%'
+      # else is represented when none of the above conditions are met
+      else: '&4%deluxeteleport_spawn_cooldown_time%'

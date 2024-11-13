@@ -1,0 +1,60 @@
+menu_title: '&bDeluxeTeleport &7▶ &8Homes'
+default_actions: false
+enabled: true
+open_commands:
+  - homes
+open_conditions:
+  conditions:
+    no_homes:
+      type: '!='
+      input: '%homes_set%'
+      output: 0
+      deny_actions:
+        actions:
+          message:
+            type: message
+            message: "%prefix_home%&cYou don't have any home at the moment"
+          sound:
+            type: sound
+            sound: BLOCK_ANVIL_LAND
+            volume: 0.8
+            pitch: 1
+size: 54
+
+items:
+  gray_pane:
+    material: gray_stained_glass_pane
+    name: ' '
+    slots:
+      - 0-9
+      - 17-18
+      - 26-27
+      - 35-36
+      - 45-53
+
+  homes:
+    material: red_bed
+    type: home
+    name: '&b%home_name_formatted%'
+    lore:
+      - ''
+      - '&fWorld: &a%home_world_formatted%'
+      - '&fX: &a%home_x_formatted%'
+      - '&fY: &a%home_y_formatted%'
+      - '&fZ: &a%home_z_formatted%'
+      - ''
+      - '&a▶ Click to go to &b%home_name%'
+    slots:
+      - 10-16
+      - 19-25
+      - 28-34
+      - 37-43
+    enchantments:
+      - mending;1
+    item_flags:
+      - HIDE_ENCHANTS
+    click_actions:
+      actions:
+        teleport_command:
+          type: command
+          command: deluxeteleport:home %home_name%

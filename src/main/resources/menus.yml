@@ -1,0 +1,5 @@
+register_commands: true
+
+gui_menus:
+  homes:
+    file: homes.yml

@@ -1,0 +1,206 @@
+#====================================================================================#
+#                           ___  _____  _  _  ____  ____  ___                        #
+#                          / __)(  _  )( \( )( ___)(_  _)/ __)                       #
+#                         ( (__  )(_)(  )  (  )__)  _)(_( (_-.                       #
+#                          \___)(_____)(_)\_)(__)  (____)\___/                       #
+#                                                                                    #
+# Welcome to Deluxe Teleport General Setup, thanks for downloading (don't forget     #
+# to leave a nice review on Spigot), you can check the official wiki here:           #
+# https://wiki.pixesoj.com/deluxeteleport/introduction                               #
+#                                                                                    #
+# You can consult the documentation for this section here:                           #
+# https://wiki.pixesoj.com/deluxeteleport/settings/general-settings                  #
+#                                                                                    #
+# You can add conditions in teleport conditions, see the documentation on how to do  #
+# it here: https://wiki.pixesoj.com/deluxeteleport/conditions                        #
+#                                                                                    #
+# You can also check conditions before teleporting in teleport conditions, see the   #
+# documentation here: https://wiki.pixesoj.com/deluxeteleport/actions                #
+#                                                                                    #
+# If you would like any new features or need help let me know on my discord server:  #
+# https://discord.com/invite/gcGarEbbbb                                              #
+#====================================================================================#
+
+# Here you can configure some things about updates
+update_config:
+  # If this option is set to true, players with permission deluxeteleport.notify.update permission
+  # will be notified (this option does not exclude console notifications)
+  # I recommend leaving this option by default
+  notify: true
+
+  auto_update:
+    # If this option is true, every time a new version is available it will be
+    # downloaded automatically when the server is turned on.
+    enabled: true
+    # Time interval to check for new updates while the server is on (leave at 0 to disable)
+    check_interval: 6h
+
+    restart:
+      # If this is set to true every time a new update is downloaded the server will be restarted
+      enabled: true
+      # If this setting is true and restart.enabled is true, downloading an update while the server is on will not restart.
+      only_on_start: true
+
+  # If this is true if missing configuration is detected in the configuration files it will be updated
+  # automatically (this does not affect existing configurations, new ones are simply added)
+  # WARNING: If you disable this you are likely to receive errors after an update, I recommend that you leave it enabled
+  update_configs: true
+  update_messages: true
+  update_permissions: true
+
+# Select here the message file to be used
+# Available languages:
+#
+# en-EN - English
+# es-ES - Español
+lang: en-EN
+
+# Here you can change/replace some messages
+replaced_messages:
+  # This is shown when the player is teleported from the console
+  console: Console
+
+# Here you can add alias commands in addition to /deluxeteleport
+# Restart your server after adding or removing an alias
+commands_alias:
+  - dt
+  - teleport
+
+# This section does not yet have an assigned function
+database:
+  # Storage type, available options
+  #
+  # localhost: storage in plugin files
+  # MySQL: storage in a MySQL database
+  # WARNING: Restart your server when changing this from localhost to MySQL
+  type: localhost
+
+  # MySQL database data
+  address: 00.00.000
+  port: 3306
+  database: DeluxeTeleport
+  username: user
+  password: 'password'
+
+  # MySQL table name
+  # WARNING: do not leave this blank or with the name of an already existing table
+  # Don't change it if you don't know what it is
+  table_name: deluxeteleport_
+
+#============================================#
+#   _____  _  _     ____  _____  ____  _  _  #
+#  (  _  )( \( )   (_  _)(  _  )(_  _)( \( ) #
+#   )(_)(  )  (   .-_)(   )(_)(  _)(_  )  (  #
+#  (_____)(_)\_)  \____) (_____)(____)(_)\_) #
+#                                            #
+#============================================#
+# Teleport settings when joining the server
+teleport_on_join:
+  # Will teleportation be enabled when joining?
+  enabled: false
+
+  # Adjustments to where the player will be teleported to when joining
+  destination_place_settings:
+    # Where will the player be teleported to when joining?
+    # Available options: Spawn, Lobby
+    destination_place: Spawn
+    # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
+    # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+    destination: world
+
+  teleport_conditions:
+    minimum_requirements: 1
+    conditions: [ ]
+
+  teleport_actions:
+    actions: [ ]
+
+  # Teleport adjustments for players joining the server for the first time
+  only_first_join:
+    # Whether the player is transported when they first join the server
+    enabled: true
+    # Destination settings where the player will be transported to for the first time
+    destination_place_settings:
+      # Destination where the player will be transported to for the first time
+      # Available options: Spawn, Lobby
+      destination_place: Spawn
+      # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
+      # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+      destination: world
+
+    teleport_conditions:
+      minimum_requirements: 1
+      conditions: [ ]
+
+    teleport_actions:
+      actions: [ ]
+
+#============================================#
+#   _____  _  _    _  _  _____  ____  ____   #
+#  (  _  )( \( )  ( \/ )(  _  )(_  _)(  _ \  #
+#   )(_)(  )  (    \  /  )(_)(  _)(_  )(_) ) #
+#  (_____)(_)\_)    \/  (_____)(____)(____/  #
+#                                            #
+#============================================#
+# Teleport adjustments when falling into the void
+teleport_on_void:
+  # If this feature is enabled?
+  enabled: false
+  # Worlds where this function will not be enabled
+  ignored_worlds:
+    - IgnoredWorld
+  # If Blindness effect was granted when teleporting
+  blindness: false
+  # How many seconds will the effect last?
+  blindness_time: 3
+
+  # Settings for where the player will be transported
+  destination_place_settings:
+    # Where will the player be teleported to?
+    # Available options: Spawn, Lobby
+    destination_place: Spawn
+    # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
+    # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+    destination: world
+
+  teleport_conditions:
+    minimum_requirements: 1
+    conditions: []
+
+  teleport_actions:
+    actions: []
+
+#==============================================================#
+#   _____  _  _    ____  ____  ___  ____   __    _    _  _  _  #
+#  (  _  )( \( )  (  _ \( ___)/ __)(  _ \ /__\  ( \/\/ )( \( ) #
+#   )(_)(  )  (    )   / )__) \__ \ )___//(__)\  )    (  )  (  #
+#  (_____)(_)\_)  (_)\_)(____)(___/(__) (__)(__)(__/\__)(_)\_) #
+#                                                              #
+#==============================================================#
+# Teleport adjustments when respawning after dying
+teleport_on_respawn:
+  # If this feature will be enabled?
+  enabled: true
+  # Worlds where when the player dies this function does not take effect
+  ignored_worlds:
+    - IgnoredWorld
+  # Whether to ignore whether the player has a bed (includes any type of respawn save)
+  # # false means that the player will go to his own respawn
+  ignore_bed: false
+  # If Blindness effect was granted when teleporting
+
+  # Adjustments to where the player will go when respawning
+  destination_place_settings:
+    # Where will the player be teleported to?
+    # Available options: Spawn, Lobby
+    destination_place: Spawn
+    # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
+    # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+    destination: world
+
+  teleport_conditions:
+    minimum_requirements: 1
+    conditions: [ ]
+
+  teleport_actions:
+    actions: [ ]

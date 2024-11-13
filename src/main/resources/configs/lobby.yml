@@ -1,0 +1,143 @@
+# ===================================================================================#
+#                             __    _____  ____  ____  _  _                          #
+#                            (  )  (  _  )(  _ \(  _ \( \/ )                         #
+#                             )(__  )(_)(  ) _ < ) _ < \  /                          #
+#                            (____)(_____)(____/(____/ (__)                          #
+#                                                                                    #
+# This is the configuration file for the lobby                                       #
+#                                                                                    #
+# You can consult the documentation for this section here:                           #
+# https://wiki.pixesoj.com/deluxeteleport/characteristics/lobby/configuration        #
+#                                                                                    #
+# If you would like any new features or need help let me know on my discord server:  #
+# https://discord.com/invite/gcGarEbbbb                                              #
+# ===================================================================================#
+
+# Sets whether /lobby, /dellobby and /setlobby will be enabled.
+enabled: true
+
+# By setting this to true, this function will be completely disabled as if it did not exist in the plugin.
+# This is useful for when you have another plugin that takes care of this. If this is not the case, do not activate it.
+# A reboot is required for it to take effect.
+force_disable: false
+
+# You can enable this if some other plugin interferes with the DeluxeTeleport command,
+# and it will try to override any other commands.
+high_priority: false
+
+# Here you can add alias commands in addition to /lobby
+# Restart your server after adding or removing an alias
+commands_alias: []
+
+# Lobby mode settings
+lobby_mode:
+  # In this option you can choose what mode the /lobby command is in
+  # Available options:
+  # Server: This means that you could establish one or more lobbies on the same server
+  # Proxy: This means that you will be able to send the player to another server in a BungeeCord environment
+  mode: Server
+  # Server that will be used as a lobby
+  server: lobby
+
+# If this is enabled you will be able to establish several lobbies
+multiple_lobbies: false
+
+# This is for when multiple_lobbies is true and the /lobby command is used without specifying a lobby
+teleport_in_multiple:
+  # Will this function be enabled? If this is not true and multiple_lobbies is true
+  # then you will have to specify a lobby in the /lobby command
+  enabled: false
+  # Available options
+  # General: Take to the general lobby (if there is one)
+  # Specify: lead to a specific lobby
+  lobby: General
+  # If lobby is Specify then specify the name of the lobby here
+  specify: Lobby
+
+# Teleport delay settings
+teleport_delay:
+  # Enable teleport delay
+  enabled: true
+  # How many seconds will there be a delay in the teleportation?
+  time: 3s
+  # Should teleport be canceled with movement?
+  cancel_on_move: true
+
+# Cooldown settings between each use of the /tpa command
+cooldown:
+  # Will it be enabled?
+  enabled: true
+  # Time in seconds between each use
+  time: 10m
+  # Adjustments to cooldown by rank
+  by_rank:
+    # Will the cooldown be enabled by rank?
+    enabled: true
+    # Here you can set the time for each range, you can add as many as you want
+    # Time is added in seconds
+    ranks:
+      # To assign permission in this example would be 'deluxeteleport.cooldown.rank.examplerank'
+      vip: 5m
+      staff: 1m 30s
+    # Settings to assign permission automatically
+    auto_ranks:
+      # If this is enabled, and you have a compatible permissions plugin the cooldowns will be automatically assigned to users
+      enabled: true
+      # Permissions plugin to be used
+      # Currently supported plugins are:
+      # - LuckPerms
+      permissions_plugin: LuckPerms
+    # This indicates whether the longest or shortest time will be used in case of having more than 1 time for the same user.
+    # Available options:
+    # LONGEST
+    # SHORTEST
+    prioritize_time: SHORTEST
+  # If this is true the data will be saved in each player's data file, this means that the data will not be lost when the server is shut down.
+  save_playerdata: true
+
+# Here you can set certain conditions before performing the teleportation and
+# even execute actions when they are met or not. You can consult the documentation here:
+# https://wiki.pixesoj.com/deluxeteleport/conditions
+teleport_conditions:
+  conditions:
+    money:
+      type: 'has money'
+      amount: 500
+      enabled: false
+      deny_actions:
+        insuficient:
+          type: message
+          message: "%prefix_spawn%&cYou don't have enough money, you need 500/%vault_money%"
+
+# Here you can perform actions before, during, after and when canceling the delay,
+# you can even add conditions to execute only in certain cases. You can consult the documentation here:
+# https://wiki.pixesoj.com/deluxeteleport/actions
+teleport_actions:
+  default_messages: true
+  actions:
+    sound1:
+      type: sound
+      when: during_delay
+      sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    actionbar1:
+      type: actionbar
+      when: during_delay
+      message: "&aTeleporting in &b%lobby_delay_formatted%"
+    sound2:
+      type: sound
+      when: cancel_delay
+      sound: BLOCK_ANVIL_LAND
+    actionbar2:
+      type: actionbar
+      when: cancel_delay
+      message: "&cTeleportation cancelled"
+      duration: 3
+    sound3:
+      type: sound
+      when: after_delay, none
+      sound: ENTITY_PLAYER_LEVELUP
+    actionbar3:
+      type: actionbar
+      when: after_delay, none
+      message: "&aTeleported"
+      duration: 2
