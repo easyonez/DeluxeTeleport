@@ -131,7 +131,6 @@ lobby:
 spawn:
   not_allowed: "&cEl spawn no está habilitado."
   not_exists: "&cEl spawn &b%spawn% &cno existe."
-  invalid_type: "&cEl tipo de lobby especificado &8(&7%type%&8) &cen lobby.yml no es válido."
   other_teleported: "&aTeletransportado a &b%player% &aal spawn."
   other_teleport: "&aHas sido teletransportado al spawn por &b%sender%."
   in_cooldown: "&cDebes esperar &b%spawn_cooldown_formatted% &cantes de volver a ir al spawn."
@@ -144,6 +143,10 @@ spawn:
   established: "&aSpawn establecido correctamente en el mundo &b%world%."
   deleted_canceled: "&6Tiempo de confirmación agotado. La eliminación del spawn ha sido cancelada."
   deleted_successfully: "&aSe ha eliminado el spawn &b%spawn% &acorrectamente."
+  deleted_error: "&cDebes especificar un spawn para poder eliminarlo."
+  no_spawns: "&cNo existe ningun spawn."
+  spawns_list: "&aSpawns: &f%spawns%"
+  exeption: "&cEste spawn no está correctamente establecido."
 
 tpa:
   not_allowed: "&cEl tpa está deshabilitado en este servidor."

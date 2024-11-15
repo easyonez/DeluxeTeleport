@@ -35,15 +35,21 @@ public class ImportSubCmd implements SubCommand {
         }
 
         if (args.length < 2) {
-            m.sendMessage(sender, msg.getMigrateErrorDataNotSpecified().replace("%compatible_data%", "Homes"), true);
+            m.sendMessage(sender, msg.getMigrateErrorDataNotSpecified().replace("%compatible_data%", "Homes, Warps"), true);
             return true;
         }
 
-        if (args[1].equalsIgnoreCase("homes")) {
+        if (args[1].equalsIgnoreCase("all")) {
+            ImportManager.importEssentialsAll(plugin, sender);
+            return true;
+        } else if (args[1].equalsIgnoreCase("homes")) {
             ImportManager.importEssentialsHomes(plugin, sender);
             return true;
+        } else if (args[1].equalsIgnoreCase("warps")) {
+            ImportManager.importEssentialsWarps(plugin, sender);
+            return true;
         } else {
-            m.sendMessage(sender, msg.getMigrateErrorInvalidData().replace("%compatible_data%", "Homes")
+            m.sendMessage(sender, msg.getMigrateErrorInvalidData().replace("%compatible_data%", "Homes, Warps")
                     .replace("%data%", args[1]), true);
         }
 

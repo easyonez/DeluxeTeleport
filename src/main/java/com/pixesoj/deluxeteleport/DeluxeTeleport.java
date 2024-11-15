@@ -102,6 +102,8 @@ public class DeluxeTeleport extends JavaPlugin {
         CommandRegisterManager commandRegisterManager = new CommandRegisterManager(this);
         commandRegisterManager.registerCommands();
 
+        new LegacyManager(this).start();
+
         CooldownDatabase cooldownDatabase = new CooldownDatabase(this);
         if (getMainTPAConfigManager().isCooldownSavePlayerData()) cooldownDatabase.loadCooldowns("tpa");
         if (getMainLobbyConfigManager().isCooldownSavePlayerData()) cooldownDatabase.loadCooldowns("lobby");
@@ -139,6 +141,10 @@ public class DeluxeTeleport extends JavaPlugin {
 
     public MessagesFileManager getMainMessagesManager() {
         return mainMessagesManager;
+    }
+
+    public void setMainMessagesManager(MessagesFileManager messagesFileManager) {
+        mainMessagesManager = messagesFileManager;
     }
 
     public ConfigWarpsManager getMainWarpConfigManager() {

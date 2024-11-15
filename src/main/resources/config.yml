@@ -17,6 +17,9 @@
 # You can also check conditions before teleporting in teleport conditions, see the   #
 # documentation here: https://wiki.pixesoj.com/deluxeteleport/actions                #
 #                                                                                    #
+# See the documentation for the time formats for these options:                      #
+# https://wiki.pixesoj.com/deluxeteleport/time-formats                               #
+#                                                                                    #
 # If you would like any new features or need help let me know on my discord server:  #
 # https://discord.com/invite/gcGarEbbbb                                              #
 #====================================================================================#
@@ -27,6 +30,10 @@ update_config:
   # will be notified (this option does not exclude console notifications)
   # I recommend leaving this option by default
   notify: true
+
+  # This indicates whether when entering the server the player with the appropriate permission
+  # will receive a notification with the changelog of a new update.
+  changelog_notify: true
 
   auto_update:
     # If this option is true, every time a new version is available it will be

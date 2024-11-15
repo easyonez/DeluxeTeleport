@@ -23,6 +23,7 @@ public class ConfigManager {
     private final FileManager configFile;
 
     private boolean UpdateNotify;
+    private boolean UpdateChangelogNotify;
     private boolean UpdateAutoUpdate;
     private String UpdateCheckInterval;
     private boolean UpdateRestartEnabled;
@@ -102,6 +103,7 @@ public class ConfigManager {
         onVoidIgnoredWorlds.add("IgnoredWorld");
 
         changed = setConfig(changed, "update_config.notify", true);
+        changed = setConfig(changed, "update_config.changelog_notify", true);
         changed = setConfig(changed, "update_config.auto_update.enabled", true);
         changed = setConfig(changed, "update_config.auto_update.check_interval", "6h");
         changed = setConfig(changed, "update_config.auto_update.restart.enabled", true);
@@ -199,6 +201,7 @@ public class ConfigManager {
         FileConfiguration config = configFile.getConfig();
 
         UpdateNotify = config.getBoolean("update_config.notify", true);
+        UpdateChangelogNotify = config.getBoolean("update_config.changelog_notify", true);
         UpdateAutoUpdate = config.getBoolean("update_config.auto_update.enabled", true);
         UpdateCheckInterval = config.getString("update_config.auto_update.check_interval", "6h");
         UpdateRestartEnabled = config.getBoolean("update_config.auto_update.restart.enabled", true);
@@ -359,5 +362,9 @@ public class ConfigManager {
 
     public boolean isUpdatePermissions() {
         return UpdatePermissions;
+    }
+
+    public boolean isUpdateChangelogNotify() {
+        return UpdateChangelogNotify;
     }
 }

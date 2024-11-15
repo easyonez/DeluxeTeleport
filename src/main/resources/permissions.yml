@@ -54,6 +54,11 @@ spawn:
   default: true
   description: Allows the player to teleport to the spawn point.
 
+spawns:
+  permission: deluxeteleport.command.spawns
+  default: true
+  description: Allows the player to view the spawn list.
+
 spawn_other:
   permission: deluxeteleport.command.spawn.other
   default: false

@@ -3,7 +3,6 @@ package com.pixesoj.deluxeteleport.managers;
 import com.pixesoj.deluxeteleport.DeluxeTeleport;
 import com.pixesoj.deluxeteleport.managers.filesmanager.PermissionsManager;
 import com.pixesoj.deluxeteleport.utils.FileUtils;
-import com.pixesoj.deluxeteleport.utils.LocationUtils;
 import com.pixesoj.deluxeteleport.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -48,12 +47,20 @@ public class TabCompleterManager implements TabCompleter {
         String pw = plugin.getMainPermissionsManager().getWarps();
         boolean dw = plugin.getMainPermissionsManager().isWarpsDefault();
 
+        String ps = plugin.getMainPermissionsManager().getSpawn();
+        boolean ds = plugin.getMainPermissionsManager().isSpawnDefault();
+
+        String pds = plugin.getMainPermissionsManager().getDelSpawn();
+        boolean dds = plugin.getMainPermissionsManager().isDelSpawnDefault();
+
         boolean resetHasPermission = PlayerUtils.hasPermission(plugin, sender, preset, dreset, false);
         boolean importHasPermission = PlayerUtils.hasPermission(plugin, sender, pi, di, false);
         boolean changelogHasPermission = PlayerUtils.hasPermission(plugin, sender, pc, dc, false);
         boolean infoHasPermission = PlayerUtils.hasPermission(plugin, sender, pInfo, dInfo, false);
         boolean delWarpsHasPermission = PlayerUtils.hasPermission(plugin, sender, pdw, ddw, false);
         boolean warpsHasPermission = PlayerUtils.hasPermission(plugin, sender, pw, dw, false);
+        boolean spawnHasPermission = PlayerUtils.hasPermission(plugin, sender, ps, ds, false);
+        boolean delSpawnHasPermission = PlayerUtils.hasPermission(plugin, sender, pds, dds, false);
 
         List<String> mainCommands = new ArrayList<>();
         if (plugin.getMainHomeConfigManager().getConfig().contains("commands_alias.home")) {
@@ -120,7 +127,7 @@ public class TabCompleterManager implements TabCompleter {
                 }
 
                 if (importHasPermission && args[0].equalsIgnoreCase("import")) {
-                    completions.add("Essentials");
+                    completions.add("essentials");
                 }
 
                 if (changelogHasPermission && args[0].equalsIgnoreCase("changelog")){
@@ -140,8 +147,10 @@ public class TabCompleterManager implements TabCompleter {
                     }
                 }
 
-                if (importHasPermission && args[0].equalsIgnoreCase("import") && args[1].equalsIgnoreCase("Essentials")) {
+                if (importHasPermission && args[0].equalsIgnoreCase("import") && args[1].equalsIgnoreCase("essentials")) {
+                    completions.add("all");
                     completions.add("homes");
+                    completions.add("warps");
                 }
 
                 String partialInput = args[2].toLowerCase();
@@ -235,7 +244,13 @@ public class TabCompleterManager implements TabCompleter {
 
         if ((command.getName().equalsIgnoreCase("delwarp") && delWarpsHasPermission && args.length == 1)
                 || (command.getName().equalsIgnoreCase("warp") && warpsHasPermission && args.length == 1)){
-            return new ArrayList<>(FileUtils.getFiles(plugin, "warps"));
+            return new ArrayList<>(FileUtils.getDataNameFiles(plugin, "warps"));
+        }
+
+        if ((command.getName().equalsIgnoreCase("delspawn") && delSpawnHasPermission && args.length == 1)
+                || (command.getName().equalsIgnoreCase("spawn") && plugin.getMainSpawnConfigManager().isByWorld()
+                && spawnHasPermission && args.length == 1)){
+            return new ArrayList<>(FileUtils.getDataNameFiles(plugin, "spawns"));
         }
 
         return Collections.emptyList();

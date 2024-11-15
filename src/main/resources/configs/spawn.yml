@@ -9,6 +9,9 @@
 # You can consult the documentation for this section here:                           #
 # https://wiki.pixesoj.com/deluxeteleport/characteristics/tpa/configuration          #
 #                                                                                    #
+# See the documentation for the time formats for these options:                      #
+# https://wiki.pixesoj.com/deluxeteleport/time-formats                               #
+#                                                                                    #
 # If you would like any new features or need help let me know on my discord server:  #
 # https://discord.com/invite/gcGarEbbbb                                              #
 #====================================================================================#
@@ -27,7 +30,10 @@ high_priority: false
 
 # Here you can add alias commands in addition to /spawn
 # Restart your server after adding or removing an alias
-commands_alias: []
+commands_alias:
+  spawn: []
+  spawns:
+    - spawnlist
 
 # Add an alias to certain worlds to display in messages
 aliases:
@@ -55,7 +61,7 @@ teleport_in_by_world:
 teleport_delay:
   # Enable teleport delay
   enabled: true
-  # How many seconds will there be a delay in the teleportation?
+  # How long will the delay be in teleportation?
   time: 3s
   # Should teleport be canceled with movement?
   cancel_on_move: true
@@ -64,7 +70,7 @@ teleport_delay:
 cooldown:
   # Will it be enabled?
   enabled: true
-  # Time in seconds between each use
+  # Time between each use of the command
   time: 10m
   # Adjustments to cooldown by rank
   by_rank:

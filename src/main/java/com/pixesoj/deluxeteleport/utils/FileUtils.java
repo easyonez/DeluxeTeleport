@@ -8,20 +8,18 @@ import java.util.List;
 
 public class FileUtils {
 
-    public static List<String> getFiles(DeluxeTeleport plugin, String type) {
+    public static List<String> getDataNameFiles(DeluxeTeleport plugin, String type) {
         List<String> list = new ArrayList<>();
 
-        if (type.equalsIgnoreCase("warps")) {
-            File folder = new File(plugin.getDataFolder(), "data/warps");
+        File folder = new File(plugin.getDataFolder(), "data/" + type);
 
-            if (folder.exists() && folder.isDirectory()) {
-                File[] files = folder.listFiles();
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
 
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.isFile() && file.getName().endsWith(".yml")) {
-                            list.add(file.getName().replace(".yml", ""));
-                        }
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile() && file.getName().endsWith(".yml")) {
+                        list.add(file.getName().replace(".yml", ""));
                     }
                 }
             }

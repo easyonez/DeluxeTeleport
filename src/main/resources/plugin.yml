@@ -1,6 +1,6 @@
 main: com.pixesoj.deluxeteleport.DeluxeTeleport
 website: https://wiki.pixesoj.com/deluxeteleport/
-version: 2.3.0
+version: 2.4.0
 name: DeluxeTeleport
 author: Pixesoj
 api-version: 1.13

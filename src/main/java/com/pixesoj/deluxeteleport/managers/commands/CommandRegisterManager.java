@@ -12,6 +12,7 @@ import com.pixesoj.deluxeteleport.commands.lobby.SetLobbyCmd;
 import com.pixesoj.deluxeteleport.commands.spawn.DelSpawnCmd;
 import com.pixesoj.deluxeteleport.commands.spawn.SetSpawnCmd;
 import com.pixesoj.deluxeteleport.commands.spawn.SpawnCmd;
+import com.pixesoj.deluxeteleport.commands.spawn.SpawnsCmd;
 import com.pixesoj.deluxeteleport.commands.tpa.*;
 import com.pixesoj.deluxeteleport.commands.warps.DelWarpCmd;
 import com.pixesoj.deluxeteleport.commands.warps.SetWarpCmd;
@@ -63,9 +64,11 @@ public class CommandRegisterManager {
         }
 
         if (plugin.getMainSpawnConfigManager().isEnabled() && !plugin.getMainSpawnConfigManager().isForceDisable()){
-            registerCommandsFromConfig(plugin.getMainSpawnConfigManager().getConfig(), SpawnCmd.class);
+            registerCommandsFromConfigList(plugin.getMainSpawnConfigManager().getConfig(), "commands_alias.spawn", SpawnCmd.class);
+            registerCommandsFromConfigList(plugin.getMainSpawnConfigManager().getConfig(), "commands_alias.spawns", SpawnsCmd.class);
 
             registerCommand("spawn", SpawnCmd.class);
+            registerCommand("spawns", SpawnsCmd.class);
             registerCommand("setspawn", SetSpawnCmd.class);
             registerCommand("delspawn", DelSpawnCmd.class);
         }

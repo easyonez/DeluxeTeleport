@@ -2,6 +2,7 @@ package com.pixesoj.deluxeteleport.subcommands;
 
 import com.pixesoj.deluxeteleport.DeluxeTeleport;
 import com.pixesoj.deluxeteleport.managers.MessagesManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.MessagesFileManager;
 import com.pixesoj.deluxeteleport.utils.PlayerUtils;
 import com.pixesoj.deluxeteleport.utils.SubCommand;
 import org.bukkit.Bukkit;
@@ -40,7 +41,6 @@ public class ReloadSubCmd implements SubCommand {
             plugin.getMainConfigManager().reloadConfig();
             plugin.getMainLobbyConfigManager().reloadConfig();
             plugin.getMainSpawnConfigManager().reloadConfig();
-            plugin.getMainMessagesManager().reloadMessages();
             plugin.getMainPermissionsManager().reloadPermissions();
             plugin.getLocationsManager().reloadLocationsFile();
             plugin.getMainTPAConfigManager().reloadConfig();
@@ -49,6 +49,9 @@ public class ReloadSubCmd implements SubCommand {
             plugin.getMainMenuConfigManager().reloadConfig();
             plugin.getMainMenuManager().reloadMenus();
             plugin.getMainWarpConfigManager().reloadConfig();
+
+            plugin.setMainMessagesManager(new MessagesFileManager(plugin));
+            plugin.getMainMessagesManager().reloadMessages();
 
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;

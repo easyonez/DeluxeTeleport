@@ -81,7 +81,8 @@ public class ConfigSpawnManager {
         changed = setConfig(changed, "enabled", true);
         changed = setConfig(changed, "force_disable", false);
         changed = setConfig(changed, "high_priority", false);
-        changed = setConfig(changed, "commands_alias", new ArrayList<>());
+        changed = setConfig(changed, "commands_alias.spawn", new ArrayList<>());
+        changed = setConfig(changed, "commands_alias.spawns", new ArrayList<>());
         changed = setConfig(changed, "aliases", new ArrayList<>());
         changed = setConfig(changed, "by_world", false);
         changed = setConfig(changed, "teleport_in_by_world.enabled", false);

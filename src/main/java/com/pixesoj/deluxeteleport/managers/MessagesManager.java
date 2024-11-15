@@ -36,10 +36,8 @@ public class MessagesManager {
                     coloredMessage = PlaceholderUtils.setLocalPlaceholders(plugin, player, coloredMessage);
                 }
             }
-        } else {
-            coloredMessage = "";
+            sender.sendMessage(getColoredMessage(coloredMessage));
         }
-        sender.sendMessage(getColoredMessage(coloredMessage));
     }
 
     public static String getColoredMessage(String message) {

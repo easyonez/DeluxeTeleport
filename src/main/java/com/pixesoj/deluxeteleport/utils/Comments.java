@@ -165,7 +165,7 @@ public class Comments {
     static {
         String headerString =
                 " \n" +
-                        "How many seconds will there be a delay in the teleportation?\n";
+                        "How long will the delay be in teleportation?\n";
 
         String[] lines = headerString.split("\n");
         LobbyTeleportDelaySeconds.addAll(Arrays.asList(lines));
@@ -240,7 +240,7 @@ public class Comments {
     static {
         String headerString =
                 " \n" +
-                        "Time in seconds between each use\n";
+                        "Time between each use of the command\n";
 
         String[] lines = headerString.split("\n");
         LobbyCooldownTime.addAll(Arrays.asList(lines));
@@ -586,7 +586,7 @@ public class Comments {
     static {
         String headerString =
                 " \n" +
-                        "How many seconds will there be a delay in the teleportation?\n";
+                        "How long will the delay be in teleportation?\n";
 
         String[] lines = headerString.split("\n");
         SpawnTeleportDelaySeconds.addAll(Arrays.asList(lines));
@@ -661,7 +661,7 @@ public class Comments {
     static {
         String headerString =
                 " \n" +
-                        "Time in seconds between each use\n";
+                        "Time between each use of the command\n";
 
         String[] lines = headerString.split("\n");
         SpawnCooldownTime.addAll(Arrays.asList(lines));

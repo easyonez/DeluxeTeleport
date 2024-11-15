@@ -41,7 +41,7 @@ public class WarpsCmd implements CommandExecutor {
         if (!CheckEnabledManager.warps(plugin, sender, true)) return;
         if (!PlayerUtils.hasPermission(plugin, sender, perm.getWarps(), perm.isWarpsDefault(), true)) return;
 
-        List<String> listWarps = FileUtils.getFiles(plugin, "warps");
+        List<String> listWarps = FileUtils.getDataNameFiles(plugin, "warps");
 
         if (listWarps.isEmpty()){
             m.sendMessage(sender, msg.getWarpNoWarps(), true);

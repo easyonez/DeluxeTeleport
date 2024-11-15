@@ -97,7 +97,6 @@ public class MessagesFileManager {
 
     private String SpawnNotEnabled;
     private String SpawnNotExists;
-    private String SpawnInvalidSpecified;
     private String SpawnOtherTeleported;
     private String SpawnOtherTeleport;
     private String SpawnInCooldown;
@@ -107,6 +106,10 @@ public class MessagesFileManager {
     private String SpawnInTeleport;
     private String SpawnDeletedSuccessfully;
     private String SpawnEstablished;
+    private String SpawnDeletedError;
+    private String SpawnNoSpawns;
+    private String SpawnSpawnsList;
+    private String SpawnExeption;
 
     private String TPANotEnabled;
     private List<String> TPARequest;
@@ -222,7 +225,6 @@ public class MessagesFileManager {
         this.plugin = plugin;
         this.m = new com.pixesoj.deluxeteleport.managers.MessagesManager("&8[&bDeluxeTeleport&8] ", plugin);
         messageFile = new FileManager("messages.yml", "lang/en-EN", plugin);
-        messageFile.registerFile();
         loadMessages();
     }
 
@@ -359,7 +361,6 @@ public class MessagesFileManager {
 
             changed = setMessage(changed, "spawn.not_allowed", "&cEl spawn no está habilitado.");
             changed = setMessage(changed, "spawn.not_exists", "&cEl spawn &b%spawn% &cno existe.");
-            changed = setMessage(changed, "spawn.invalid_type", "&cEl tipo de spawn especificado &8(&7%type%&8) &cen lobby.yml no es válido.");
             changed = setMessage(changed, "spawn.other_teleported", "&aHas teletransportado a &b%player% &aal spawn.");
             changed = setMessage(changed, "spawn.other_teleport", "&aHas sido teletransportado al spawn por &b%sender%.");
             changed = setMessage(changed, "spawn.in_cooldown", "&cDebes esperar &b%time% &csegundos antes de volver al spawn.");
@@ -372,6 +373,10 @@ public class MessagesFileManager {
             changed = setMessage(changed, "spawn.established", "&aSpawn establecido correctamente en el mundo &b%world%.");
             changed = setMessage(changed, "spawn.deleted_canceled", "&6Tiempo de confirmación agotado. La eliminación del spawn ha sido cancelada.");
             changed = setMessage(changed, "spawn.deleted_successfully", "&aEl spawn &b%spawn% &ase ha eliminado correctamente.");
+            changed = setMessage(changed, "spawn.deleted_error", "&cDebes especificar un spawn para poder eliminarlo.");
+            changed = setMessage(changed, "spawn.no_spawns", "&cNo existe ningun spawn.");
+            changed = setMessage(changed, "spawn.spawns_list", "&aSpawns: &f%spawns%");
+            changed = setMessage(changed, "spawn.exeption", "&cEste spawn no está correctamente establecido.");
 
 
             changed = setMessage(changed, "tpa.not_allowed", "&cEl tpa está deshabilitado en este servidor.");
@@ -595,7 +600,6 @@ public class MessagesFileManager {
 
             changed = setMessage(changed, "spawn.not_allowed", "&cSpawn is not enabled.");
             changed = setMessage(changed, "spawn.not_exists", "&cSpawn &b%spawn% &cdoes not exist.");
-            changed = setMessage(changed, "spawn.invalid_type", "&cThe specified lobby type &8(&7%type%&8) &cin lobby.yml is invalid.");
             changed = setMessage(changed, "spawn.other_teleported", "&aTeleported to &b%player% &aat spawn.");
             changed = setMessage(changed, "spawn.other_teleport", "&aYou have been teleported to the spawn by &b%sender%.");
             changed = setMessage(changed, "spawn.in_cooldown", "&cYou must wait &b%time% &cseconds before going to the spawn again.");
@@ -608,6 +612,10 @@ public class MessagesFileManager {
             changed = setMessage(changed, "spawn.established", "&aSpawn successfully set in world &b%world%.");
             changed = setMessage(changed, "spawn.deleted_canceled", "&6Confirmation time expired. Spawn deletion canceled.");
             changed = setMessage(changed, "spawn.deleted_successfully", "&aSpawn &b%spawn% &adeleted successfully.");
+            changed = setMessage(changed, "spawn.deleted_error", "&cYou must specify a spawn in order to delete it.");
+            changed = setMessage(changed, "spawn.no_spawns", "&cThere is no spawn.");
+            changed = setMessage(changed, "spawn.spawns_list", "&aSpawns: &f%spawns%");
+            changed = setMessage(changed, "spawn.exeption", "&cThis spawn is not set correctly.");
 
 
             changed = setMessage(changed, "tpa.not_allowed", "&cTPA is disabled on this server.");
@@ -858,7 +866,6 @@ public class MessagesFileManager {
 
         SpawnNotEnabled = messages.getString("spawn.not_allowed");
         SpawnNotExists = messages.getString("spawn.not_exists");
-        SpawnInvalidSpecified = messages.getString("spawn.invalid_type");
         SpawnOtherTeleported = messages.getString("spawn.other_teleported");
         SpawnOtherTeleport = messages.getString("spawn.other_teleport");
         SpawnInCooldown = messages.getString("spawn.in_cooldown");
@@ -866,8 +873,12 @@ public class MessagesFileManager {
         SpawnCanceledMove = messages.getString("spawn.canceled_move");
         SpawnDelayInTeleport = messages.getString("spawn.delay_in_teleport");
         SpawnInTeleport = messages.getString("spawn.in_teleport");
-        SpawnDeletedSuccessfully = messages.getString("lobby.deleted_successfully");
+        SpawnDeletedSuccessfully = messages.getString("spawn.deleted_successfully");
         SpawnEstablished = messages.getString("spawn.established");
+        SpawnDeletedError = messages.getString("spawn.deleted_error");
+        SpawnNoSpawns = messages.getString("spawn.no_spawns");
+        SpawnSpawnsList = messages.getString("spawn.spawns_list");
+        SpawnExeption = messages.getString("spawn.exeption");
 
         TPANotEnabled = messages.getString("tpa.not_allowed");
         TPARequest = messages.getStringList("tpa.tpa_request");
@@ -1115,10 +1126,6 @@ public class MessagesFileManager {
 
     public String getSpawnNotExists() {
         return SpawnNotExists;
-    }
-
-    public String getSpawnInvalidSpecified() {
-        return SpawnInvalidSpecified;
     }
 
     public String getSpawnOtherTeleported() {
@@ -1599,6 +1606,22 @@ public class MessagesFileManager {
 
     public String getWarpNoWarps() {
         return WarpNoWarps;
+    }
+
+    public String getSpawnDeletedError() {
+        return SpawnDeletedError;
+    }
+
+    public String getSpawnSpawnsList() {
+        return SpawnSpawnsList;
+    }
+
+    public String getSpawnNoSpawns() {
+        return SpawnNoSpawns;
+    }
+
+    public String getSpawnExeption() {
+        return SpawnExeption;
     }
 }
 

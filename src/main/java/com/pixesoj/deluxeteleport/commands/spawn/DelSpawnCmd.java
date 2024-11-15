@@ -4,6 +4,9 @@ import com.pixesoj.deluxeteleport.DeluxeTeleport;
 import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigSpawnManager;
 import com.pixesoj.deluxeteleport.managers.MessagesManager;
 import com.pixesoj.deluxeteleport.managers.CheckEnabledManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.FileManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.MessagesFileManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.PermissionsManager;
 import com.pixesoj.deluxeteleport.utils.LocationUtils;
 import com.pixesoj.deluxeteleport.utils.PlayerUtils;
 import org.bukkit.command.Command;
@@ -11,6 +14,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class DelSpawnCmd implements CommandExecutor {
     private final DeluxeTeleport plugin;
@@ -25,35 +30,30 @@ public class DelSpawnCmd implements CommandExecutor {
     }
 
     public void mainCommand(@NotNull CommandSender sender, String[] args) {
-        ConfigSpawnManager spawnC = plugin.getMainSpawnConfigManager();
+        ConfigSpawnManager spawnConfig = plugin.getMainSpawnConfigManager();
+        PermissionsManager perm = plugin.getMainPermissionsManager();
+        MessagesFileManager msg = plugin.getMainMessagesManager();
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
+
         if (!CheckEnabledManager.spawn(plugin, sender, true)) return;
-        if (!PlayerUtils.hasPermission(plugin, sender, plugin.getMainPermissionsManager().getDelSpawn(),
-                plugin.getMainPermissionsManager().isDelSpawnDefault(), true)) return;
-        if (args.length == 0 || !spawnC.isByWorld()) {
-            deleteGeneralSpawn(sender);
-        } else {
-            String spawn = args[0];
-            deleteSpecificSpawn(sender, spawn);
+        if (!PlayerUtils.hasPermission(plugin, sender, perm.getDelSpawn(), perm.isDelSpawnDefault(), true)) return;
+
+        boolean isByWorld = spawnConfig.isByWorld();
+        if (isByWorld && args.length < 1){
+            m.sendMessage(sender, msg.getSpawnDeletedError(), true);
+            return;
         }
-    }
 
-    private void deleteGeneralSpawn(CommandSender sender) {
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
-        if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "general", null, true)) return;
-        locations.set("Spawn.General", null);
-        plugin.getLocationsManager().saveLocationsFile();
-        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
-        m.sendMessage(sender, plugin.getMainMessagesManager().getSpawnDeletedSuccessfully()
-                .replace("%spawn%", "general"), true);
-    }
+        String spawnName = isByWorld ? args[0] : "general-spawn";
+        FileManager fileManager = new FileManager(spawnName + ".yml", "data/spawns", false, plugin);
+        File spawn = fileManager.getFile();
 
-    private void deleteSpecificSpawn(CommandSender sender, String spawnName) {
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
-        if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawnName, true)) return;
-        locations.set("Spawn.ByWorld." + spawnName, null);
-        plugin.getLocationsManager().saveLocationsFile();
-        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
-        m.sendMessage(sender, plugin.getMainMessagesManager().getSpawnDeletedSuccessfully()
-                .replace("%spawn%", spawnName), true);
+        if (spawn.exists()) {
+            if (spawn.delete()) {
+                m.sendMessage(sender, msg.getSpawnDeletedSuccessfully().replace("%spawn%", spawnName), true);
+            }
+        } else {
+            m.sendMessage(sender, msg.getSpawnNotExists().replace("%spawn%", spawnName), true);
+        }
     }
 }

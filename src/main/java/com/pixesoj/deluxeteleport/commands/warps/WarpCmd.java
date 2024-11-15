@@ -83,7 +83,7 @@ public class WarpCmd implements CommandExecutor {
 
         Location location;
         try {
-            UUID worldUUID = UUID.fromString(warpData.getString("world", "null"));
+            UUID worldUUID = UUID.fromString(warpData.getString("world", ""));
             World world = Bukkit.getWorld(worldUUID);
             if (world == null){
                 m.sendMessage(player, msg.getWarpExeption().replace("%warp%", warpName), true);

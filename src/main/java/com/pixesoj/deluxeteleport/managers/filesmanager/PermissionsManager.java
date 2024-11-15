@@ -49,6 +49,9 @@ public class PermissionsManager {
     private boolean SpawnOtherDefault;
     private String SpawnCooldownRank;
     private boolean SpawnDenyDefault;
+    private String Spawns;
+    private boolean SpawnsDefault;
+
 
 
     private boolean TpaDefault;
@@ -191,6 +194,9 @@ public class PermissionsManager {
         changed = setPermission(changed, "spawn.permission", "deluxeteleport.command.spawn");
         changed = setPermission(changed, "spawn.default", true);
         changed = setPermission(changed, "spawn.description", "Allows the player to teleport to the spawn point.");
+        changed = setPermission(changed, "spawns.permission", "deluxeteleport.command.spawns");
+        changed = setPermission(changed, "spawns.default", true);
+        changed = setPermission(changed, "spawns.description", "Allows the player to view the spawn list.");
         changed = setPermission(changed, "spawn_other.permission", "deluxeteleport.command.spawn.other");
         changed = setPermission(changed, "spawn_other.default", false);
         changed = setPermission(changed, "spawn_other.description", "Allows the player to send another player to the spawn point.");
@@ -408,6 +414,8 @@ public class PermissionsManager {
         SpawnOther = permissions.getString("spawn_other.permission");
         SpawnOtherDefault = permissions.getBoolean("spawn_other.default");
         SpawnCooldownRank = permissions.getString("spawn_cooldown_rank.permission");
+        Spawns = permissions.getString("spawns.permission");
+        SpawnsDefault = permissions.getBoolean("spawns.default");
 
 
         TpaDefault = permissions.getBoolean("tpa.default");
@@ -857,5 +865,13 @@ public class PermissionsManager {
 
     public String getWarps() {
         return Warps;
+    }
+
+    public boolean isSpawnsDefault() {
+        return SpawnsDefault;
+    }
+
+    public String getSpawns() {
+        return Spawns;
     }
 }

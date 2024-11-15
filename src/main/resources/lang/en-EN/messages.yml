@@ -124,9 +124,7 @@ lobby:
   canceled_move: "&cTeleport to the lobby canceled due to movement."
   deleted_canceled: "&6Confirmation time expired. The lobby deletion has been canceled."
   deleted_successfully: "&aThe lobby &b%lobby% &awas successfully deleted."
-  deleted_confirm:
-    - "&6Are you sure you want to delete the lobby &b%lobby%?"
-    - "&6Type &aconfirm &6to confirm."
+  deleted_error: "&cYou must specify a spawn in order to delete it."
 
 spawn:
   not_allowed: "&cSpawn is not enabled."
@@ -144,9 +142,10 @@ spawn:
   established: "&aSpawn successfully established in the world &b%world%."
   deleted_canceled: "&6Confirmation time expired. The spawn deletion has been canceled."
   deleted_successfully: "&aThe spawn &b%spawn% &awas successfully deleted."
-  deleted_confirm:
-    - "&6Are you sure you want to delete the spawn &b%spawn%?"
-    - "&6Type &aconfirm &6to confirm."
+  deleted_error: "&cYou must specify a spawn in order to delete it."
+  no_spawns: "&cThere is no spawn."
+  spawns_list: "&aSpawns: &f%spawns%"
+  exeption: "&cThis spawn is not set correctly."
 
 tpa:
   not_allowed: "&cTPA is disabled on this server."

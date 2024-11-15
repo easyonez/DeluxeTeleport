@@ -38,7 +38,7 @@ public class DelWarpCmd implements CommandExecutor {
         }
 
         String warpName = args[0];
-        FileManager fileManager = new FileManager(warpName + ".yml", "data/warps", plugin);
+        FileManager fileManager = new FileManager(warpName + ".yml", "data/warps", false, plugin);
         File warp = fileManager.getFile();
 
         if (warp.exists()) {
@@ -46,7 +46,7 @@ public class DelWarpCmd implements CommandExecutor {
                 m.sendMessage(sender, msg.getWarpDeletedSuccessfully().replace("%warp%", warpName), true);
             }
         } else {
-            m.sendMessage(sender, msg.getWarpDeletedError().replace("%warp%", warpName), true);
+            m.sendMessage(sender, msg.getWarpNotExist().replace("%warp%", warpName), true);
         }
     }
 }

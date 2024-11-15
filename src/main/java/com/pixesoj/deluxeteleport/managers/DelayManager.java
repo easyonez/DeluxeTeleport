@@ -135,6 +135,7 @@ public class DelayManager {
     public void spawn(){
         boolean defaultMessage = plugin.getMainSpawnConfigManager().getConfig().getBoolean("actions.default_messages", true);
         ActionsManager actionsManager = new ActionsManager(plugin, plugin.getMainSpawnConfigManager().getConfig(), "teleport_actions");
+        ActionsManager spawnActionsManager = new ActionsManager(plugin, plugin.getMainSpawnConfigManager().getConfig(), "teleport_actions");
         boolean cancelOnMove = plugin.getMainSpawnConfigManager().isTeleportDelayCancelOnMove();
         BukkitScheduler sh = Bukkit.getServer().getScheduler();
         delaySpawnMap.put(player.getName(), this);
@@ -156,11 +157,13 @@ public class DelayManager {
                         delaySpawnMap.remove(player.getName());
 
                         if (plugin.getMainSpawnConfigManager().isCooldownEnabled()) {
-                            Bukkit.getLogger().info("[CooldownManager] Iniciando llamando a cooldown handler" + player);
                             CooldownHandlers.Spawn(plugin, player);
                         }
                         actionsManager.general("after_delay", player);
                         actionsManager.general("none", player);
+
+                        spawnActionsManager.general("after_delay", player);
+                        spawnActionsManager.general("none", player);
                     });
                 } else {
                     if (cancelOnMove && (player.getLocation().getBlockX() != initialX ||
@@ -172,9 +175,11 @@ public class DelayManager {
                         plugin.removePlayerTeleport(player);
                         delaySpawnMap.remove(player.getName());
                         actionsManager.general("cancel_delay", player);
+                        spawnActionsManager.general("cancel_delay", player);
                         return;
                     }
                     actionsManager.general("during_delay", player);
+                    spawnActionsManager.general("during_delay", player);
                     time--;
                 }
             }

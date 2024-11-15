@@ -22,7 +22,7 @@ commands_alias:
 teleport_delay:
   # Enable teleport delay
   enabled: true
-  # How many seconds will there be a delay in the teleportation?
+  # How long will the delay be in teleportation?
   time: 3s
   # Should teleport be canceled with movement?
   cancel_on_move: true
@@ -31,7 +31,7 @@ teleport_delay:
 cooldown:
   # Will it be enabled?
   enabled: true
-  # Time in seconds between each use
+  # Time between each use of the command
   time: 10m
   # Adjustments to cooldown by rank
   by_rank:

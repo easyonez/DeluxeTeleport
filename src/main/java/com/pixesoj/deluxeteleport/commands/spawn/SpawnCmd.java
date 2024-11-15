@@ -2,6 +2,7 @@ package com.pixesoj.deluxeteleport.commands.spawn;
 
 import com.pixesoj.deluxeteleport.DeluxeTeleport;
 import com.pixesoj.deluxeteleport.managers.*;
+import com.pixesoj.deluxeteleport.managers.filesmanager.FileManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.MessagesFileManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.PermissionsManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigSpawnManager;
@@ -11,35 +12,42 @@ import com.pixesoj.deluxeteleport.utils.PlayerUtils;
 import com.pixesoj.deluxeteleport.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.UUID;
+
 public class SpawnCmd implements CommandExecutor {
     private final DeluxeTeleport plugin;
-    private final ConfigSpawnManager spawnC;
+    private final ConfigSpawnManager configSpawn;
     private final MessagesFileManager msg;
     private final PermissionsManager perm;
     private final MessagesManager m;
-    private final  ActionsManager actionsManager;
+    private final ActionsManager actionsManager;
     private final ConditionsManager conditionsManager;
     private final boolean defaultMessages;
 
+    private ConditionsManager spawnConditionsManager;
+    private ActionsManager spawnActionsManager;
     private Location location;
     private String targetPlayerName;
     private String spawn;
 
     public SpawnCmd(DeluxeTeleport plugin) {
         this.plugin = plugin;
-        this.spawnC = plugin.getMainSpawnConfigManager();
+        this.configSpawn = plugin.getMainSpawnConfigManager();
         this.msg = plugin.getMainMessagesManager();
         this.perm = plugin.getMainPermissionsManager();
         this.m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
 
-        this.conditionsManager = new ConditionsManager(plugin, spawnC.getConfig(), "teleport_conditions");
-        this.actionsManager = new ActionsManager(plugin, spawnC.getConfig(), "teleport_actions");
+        this.conditionsManager = new ConditionsManager(plugin, configSpawn.getConfig(), "teleport_conditions");
+        this.actionsManager = new ActionsManager(plugin, configSpawn.getConfig(), "teleport_actions");
         this.defaultMessages = plugin.getMainSpawnConfigManager().getConfig().getBoolean("actions.default_messages", true);
     }
 
@@ -55,61 +63,62 @@ public class SpawnCmd implements CommandExecutor {
         if (!CheckEnabledManager.spawn(plugin, sender, true)) return;
         if (!PlayerUtils.hasPermission(plugin, sender, perm.getSpawn(), perm.isSpawnDefault(), true)) return;
         if (!PlayerUtils.isPlayer(plugin, sender, false)) {
-            if (args.length > 0) {
-                commandConsole(sender, args);
-                return;
-            }
-            m.sendMessage(sender, plugin.getMainMessagesManager().getGlobalInvalidArguments()
-                    .replace("%usage%", "&aspawn &6[spawn] &c<player>"), true);
-            return;
+            commandConsole(sender, args);
+        } else {
+            commandPlayer(sender, args);
         }
-
-        commandPlayer(sender, args);
     }
 
     public void commandConsole(CommandSender sender, String[] args) {
-       if (args.length == 1 && spawnC.isByWorld() && spawnC.isTeleportInByWorldEnabled()) {
-          if (spawnC.getTeleportInByWorldSpawn().equalsIgnoreCase("general")) {
-              location = LocationUtils.getLocation(plugin, "spawn", "general", null);
-              if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "general", null, true)) return;
-          } else if (spawnC.getTeleportInByWorldSpawn().equalsIgnoreCase("specify")) {
-              spawn = spawnC.getTeleportInByWorldSpecify();
-              location = LocationUtils.getLocation(plugin, "spawn", "byworld", spawn);
-              if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawn, true)) return;
-          } else {
-              m.sendMessage(sender, msg.getSpawnInvalidSpecified()
-                      .replace("%type%", spawnC.getTeleportInByWorldSpawn()), true);
-              return;
-          }
-          targetPlayerName = args[0];
-       } else if (spawnC.isByWorld()) {
-          if (args.length < 2 || args[1].isEmpty()) {
-              m.sendMessage(Bukkit.getConsoleSender(), plugin.getMainMessagesManager().getGlobalInvalidArguments()
-                      .replace("%usage%", "&aspawn &6[spawn] &c<player>"), true);
-              return;
-          }
+        String spawnName;
+        if (configSpawn.isByWorld()){
+            if (args.length < 2) {
+                String usage = "spawn <spawn> [player]";
+                m.sendMessage(sender, msg.getGlobalInvalidArguments().replace("%usage%", usage), true);
+                return;
+            } else {
+                spawnName = args[0];
+                targetPlayerName = args[1];
+            }
+        } else {
+            if (args.length < 1){
+                String usage = "spawn [player]";
+                m.sendMessage(sender, msg.getGlobalInvalidArguments().replace("%usage%", usage), true);
+                return;
+            } else {
+                spawnName = "general-spawn";
+                targetPlayerName = args[0];
+            }
+        }
 
-          spawn = args[0];
-          targetPlayerName = args[1];
-          location = LocationUtils.getLocation(plugin, "spawn", "byworld", spawn);
-          if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawn, true)) return;
-       } else {
-          if (args.length < 1) {
-              m.sendMessage(Bukkit.getConsoleSender(), plugin.getMainMessagesManager().getGlobalInvalidArguments()
-                      .replace("%usage%", "&aspawn &c<player>"), true);
-              return;
-          }
+        FileManager fileManager = new FileManager(spawnName + ".yml", "data/spawns", false, plugin);
+        FileConfiguration spawn = fileManager.getConfig();
 
-          targetPlayerName = args[0];
-          location = LocationUtils.getLocation(plugin, "spawn", "general", null);
-          if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "general", null, true)) return;
-       }
+        try {
+            UUID worldUUID = UUID.fromString(spawn.getString("world", ""));
+            World world = Bukkit.getWorld(worldUUID);
+            if (world == null) {
+                m.sendMessage(sender, msg.getSpawnExeption().replace("%warp%", spawnName), true);
+                return;
+            }
+            double x = spawn.getDouble("x");
+            double y = spawn.getDouble("y");
+            double z = spawn.getDouble("z");
+            float yaw = spawn.getInt("yaw");
+            float pitch = spawn.getInt("pitch");
+            location = new Location(world, x, y, z, yaw, pitch);
+        } catch (NullPointerException | IllegalArgumentException e){
+            m.sendMessage(sender, msg.getSpawnExeption().replace("%warp%", spawnName), true);
+            return;
+        }
 
         Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-        if (!PlayerUtils.isOnline(plugin, sender, targetPlayer, true)) return;
+        if (!PlayerUtils.isOnline(plugin, sender, targetPlayer, false)) {
+            m.sendMessage(sender, msg.getGlobalPlayerOffline().replace("%player%", targetPlayerName), true);
+            return;
+        }
 
-        if (LocationUtils.isNull(plugin, sender, location, "spawn", spawn, true)) return;
-
+        targetPlayer.teleport(location);
         m.sendMessage(sender, msg.getSpawnOtherTeleported()
                 .replace("%player%", targetPlayerName), true);
 
@@ -117,135 +126,107 @@ public class SpawnCmd implements CommandExecutor {
         if (defaultMessages) m.sendMessage(targetPlayer, msg.getSpawnOtherTeleport()
                 .replace("%sender%", replacedMessage), true);
 
-        assert location != null;
-        targetPlayer.teleport(location);
-
-        actionsManager.general("none", targetPlayer);
     }
 
     public void commandPlayer(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         boolean isOther = false;
 
+        boolean isSpawnOtherPermission = PlayerUtils.hasPermission(plugin, sender, perm.getSpawnOther(), perm.isSpawnOtherDefault(), false);
         boolean isByppasCooldownPermission = PlayerUtils.hasPermission(plugin, sender, perm.getSpawnBypassCooldown(), perm.isSpawnBypassCooldownDefault(), false);
-        if (spawnC.isCooldownEnabled() && plugin.playerSpawnInCooldown(player) && !isByppasCooldownPermission) {
+
+        if (configSpawn.isCooldownEnabled() && plugin.playerSpawnInCooldown(player) && !isByppasCooldownPermission) {
             m.sendMessage(sender, msg.getSpawnInCooldown(), true);
             return;
         }
 
-        boolean isSpawnOtherPermission = PlayerUtils.hasPermission(plugin, sender, perm.getSpawnOther(), perm.isSpawnOtherDefault(), false);
-        if (spawnC.isByWorld()) {
-            if (isSpawnOtherPermission) {
-                if (args.length != 0) {
-                    spawn = args[0];
-                    if (args.length >= 2) {
-                        targetPlayerName = args[1];
-                        isOther = true;
-                    } else {
-                        targetPlayerName = player.getName();
-                    }
-
-                    location = LocationUtils.getLocation(plugin, "spawn", "byworld", spawn);
-                    if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawn, true)) return;
-                } else {
-                    if (spawnC.isTeleportInByWorldEnabled()) {
-                        if (spawnC.getTeleportInByWorldSpawn().equalsIgnoreCase("general")) {
-                            location = LocationUtils.getLocation(plugin, "spawn", "general", null);
-                            if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "general", null, true)) return;
-                        } else if (spawnC.getTeleportInByWorldSpawn().equalsIgnoreCase("specify")) {
-                            spawn = spawnC.getTeleportInByWorldSpecify();
-                            location = LocationUtils.getLocation(plugin, "spawn", "byworld", spawn);
-                            if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawn, true)) return;
-                        } else {
-                            m.sendMessage(sender, msg.getSpawnInvalidSpecified()
-                                    .replace("%type%", spawnC.getTeleportInByWorldSpawn()), true);
-                            return;
-                        }
-                        targetPlayerName = player.getName();
-                    } else {
-                        m.sendMessage(sender, msg.getGlobalInvalidArguments()
-                                .replace("%usage%", "&a/spawn &c<spawn> &6[player]"), true);
-                        return;
-                    }
-                }
+        String spawnName = "general-spawn";
+        targetPlayerName = player.getName();
+        if (configSpawn.isByWorld()){
+            if (configSpawn.isTeleportInByWorldEnabled() && args.length == 0){
+                spawnName = configSpawn.getTeleportInByWorldSpawn().equalsIgnoreCase("specify") ? configSpawn.getTeleportInByWorldSpecify() : "general-spawn";
+            } else if (args.length > 0) {
+                spawnName = args[0];
             } else {
-                targetPlayerName = player.getName();
-                if (args.length == 0) {
-                    if (spawnC.isTeleportInByWorldEnabled()) {
-                        if (spawnC.getTeleportInByWorldSpawn().equalsIgnoreCase("general")) {
-                            location = LocationUtils.getLocation(plugin, "spawn", "general", null);
-                            if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "general", null, true)) return;
-                        } else if (spawnC.getTeleportInByWorldSpawn().equalsIgnoreCase("specify")) {
-                            spawn = spawnC.getTeleportInByWorldSpecify();
-                            location = LocationUtils.getLocation(plugin, "spawn", "byworld", spawn);
-                            if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawn, true)) return;
-                        } else {
-                            m.sendMessage(sender, msg.getSpawnInvalidSpecified()
-                                    .replace("%type%", spawnC.getTeleportInByWorldSpawn()), true);
-                            return;
-                        }
-                    } else {
-                        m.sendMessage(sender, msg.getGlobalInvalidArguments()
-                                .replace("%usage%", "&a/spawn &6<player>"), true);
-                        return;
-                    }
-                } else {
-                    spawn = args[0];
-                    location = LocationUtils.getLocation(plugin, "spawn", "byworld", spawn);
-                    if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "byworld", spawn, true)) return;
-                }
-            }
-        } else {
-            targetPlayerName = player.getName();
-            if (isSpawnOtherPermission) {
-                if (!(args.length == 0)) {
-                    targetPlayerName = args[0];
-                    isOther = true;
-                }
+                String usage = isSpawnOtherPermission ? "/spawn <spawn> [player]" : "/spawn <spawn>";
+                m.sendMessage(sender, msg.getGlobalInvalidArguments().replace("%usage%", usage), true);
+                return;
             }
 
-            location = LocationUtils.getLocation(plugin, "spawn", "general", null);
-            if (!LocationUtils.keyPathExist(plugin, sender, "spawn", "general", null, true)) return;
+            if (isSpawnOtherPermission && args.length > 1) {
+                targetPlayerName = args[1];
+                isOther = true;
+            }
+
+        } else {
+            if (isSpawnOtherPermission && args.length > 0) {
+                targetPlayerName = args[0];
+                isOther = true;
+            }
         }
 
+        FileManager fileManager = new FileManager(spawnName + ".yml", "data/spawns", false, plugin);
+        FileConfiguration spawn = fileManager.getConfig();
+
+        spawnActionsManager = new ActionsManager(plugin, spawn, "teleport_actions");
+        spawnConditionsManager = new ConditionsManager(plugin, spawn, "conditions_teleport");
+
+        try {
+            UUID worldUUID = UUID.fromString(spawn.getString("world", ""));
+            World world = Bukkit.getWorld(worldUUID);
+            if (world == null) {
+                m.sendMessage(player, msg.getSpawnExeption().replace("%warp%", spawnName), true);
+                return;
+            }
+            double x = spawn.getDouble("x");
+            double y = spawn.getDouble("y");
+            double z = spawn.getDouble("z");
+            float yaw = spawn.getInt("yaw");
+            float pitch = spawn.getInt("pitch");
+            location = new Location(world, x, y, z, yaw, pitch);
+        } catch (NullPointerException | IllegalArgumentException e){
+            m.sendMessage(player, msg.getSpawnExeption().replace("%warp%", spawnName), true);
+            return;
+        }
 
         Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
-        if (!PlayerUtils.isOnline(plugin, sender, targetPlayer, true)) return;
+        if (!PlayerUtils.isOnline(plugin, sender, targetPlayer, false)) {
+            m.sendMessage(sender, msg.getGlobalPlayerOffline().replace("%player%", targetPlayerName), true);
+            return;
+        }
 
-        if (LocationUtils.isNull(plugin, sender, location, "spawn", spawn, true)) return;
-        assert location != null;
-
-        if (!conditionsManager.isCondition(targetPlayer)) {
+        if (!conditionsManager.isCondition(targetPlayer) && !spawnConditionsManager.isCondition(targetPlayer)) {
             return;
         }
 
         boolean isBypassDelayPermission = PlayerUtils.hasPermission(plugin, sender, perm.getSpawnBypassDelay(), perm.isSpawnBypassDelayDefault(), false);
-        if (!isOther && spawnC.isTeleportDelayEnabled() && !isBypassDelayPermission) {
-            int delay = TimeUtils.timerConverter("ticks", spawnC.getTeleportDelay());
+        if (!isOther && configSpawn.isTeleportDelayEnabled() && !isBypassDelayPermission) {
+            int delay = TimeUtils.timerConverter("ticks", configSpawn.getTeleportDelay());
             DelayManager delayManager = new DelayManager(plugin, delay, player, location);
             DelayHandler.spawn(plugin, targetPlayer, delayManager);
             actionsManager.general("before_delay", targetPlayer);
+            spawnActionsManager.general("before_delay", targetPlayer);
             if (defaultMessages) m.sendMessage(targetPlayer, msg.getSpawnDelayInTeleport(), true);
             return;
         }
 
         targetPlayer.teleport(location);
 
-        boolean isEnabledCooldown = spawnC.isCooldownEnabled();
+        boolean isEnabledCooldown = configSpawn.isCooldownEnabled();
         if (!isOther) {
             if (isEnabledCooldown) {
                 CooldownHandlers.Spawn(plugin, targetPlayer);
             }
 
             actionsManager.general("none", targetPlayer);
+            spawnActionsManager.general("none", targetPlayer);
             if (defaultMessages) m.sendMessage(targetPlayer, msg.getSpawnTeleporting(), true);
         } else {
             m.sendMessage(sender, msg.getSpawnOtherTeleported()
                     .replace("%player%", targetPlayerName), true);
 
-            String replacedMessage = plugin.getMainConfigManager().getReplacedMessagesConsole() != null ? plugin.getMainConfigManager().getReplacedMessagesConsole() : "Console";
             if (defaultMessages) m.sendMessage(targetPlayer, msg.getSpawnOtherTeleport()
-                    .replace("%sender%", replacedMessage), true);
+                    .replace("%sender%", sender.getName()), true);
         }
     }
 }

@@ -9,6 +9,7 @@ import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigLobbyManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigSpawnManager;
 import com.pixesoj.deluxeteleport.managers.MessagesManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.PermissionsManager;
 import com.pixesoj.deluxeteleport.model.internal.UpdateCheckResult;
 import com.pixesoj.deluxeteleport.subcommands.ChangelogSubCmd;
 import com.pixesoj.deluxeteleport.utils.LocationUtils;
@@ -36,11 +37,13 @@ public class JoinListener implements Listener {
     @EventHandler
     public void notifyUpdate (PlayerJoinEvent event){
         Player player = event.getPlayer();
+        ConfigManager config = plugin.getMainConfigManager();
+        PermissionsManager perm = plugin.getMainPermissionsManager();
         MessagesManager m = new MessagesManager("DeluxeTeleport", plugin);
-        if (!PlayerUtils.hasPermission(plugin, player, plugin.getMainPermissionsManager().getNotifyUpdate(), plugin.getMainPermissionsManager().isNotifyUpdateDefault(), false)) return;
+        if (!PlayerUtils.hasPermission(plugin, player, perm.getNotifyUpdate(), perm.isNotifyUpdateDefault(), false)) return;
         UpdateCheckManager updateCheckManager = new UpdateCheckManager(plugin.version);
         UpdateCheckResult result = updateCheckManager.check();
-        if (plugin.getMainConfigManager().isUpdateNotify() && result.isUpdateAvailable()) {
+        if (config.isUpdateNotify() && result.isUpdateAvailable()) {
             List<String> message = plugin.getMainMessagesManager().getUpdateNewUpdate();
             for (String msg : message) {
                 m.sendMessage(player, msg
@@ -50,7 +53,7 @@ public class JoinListener implements Listener {
             }
         }
 
-        if (player.isOp()){
+        if (config.isUpdateChangelogNotify() && player.isOp()){
             DataDatabase dataDatabase = new DataDatabase(plugin);
             if (dataDatabase.getNotificationStatus(player.getName(), plugin.version)) {
                 ChangelogSubCmd changelogSubCmd = new ChangelogSubCmd(plugin);

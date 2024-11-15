@@ -9,6 +9,9 @@
 # You can consult the documentation for this section here:                           #
 # https://pixesoj-dev.gitbook.io/plugins/deluxeteleport/characteristics/tpa          #
 #                                                                                    #
+# See the documentation for the time formats for these options:                      #
+# https://wiki.pixesoj.com/deluxeteleport/time-formats                               #
+#                                                                                    #
 # If you would like any new features or need help let me know on my discord server:  #
 # https://discord.com/invite/gcGarEbbbb                                              #
 #====================================================================================#
@@ -86,7 +89,7 @@ delay:
 cooldown:
   # Will it be enabled?
   enabled: true
-  # Time in seconds between each use
+  # Time between each use of the command
   time: 10m
   # This causes the cooldown to be used until the teleport is accepted.
   count_when_teleporting: true
