@@ -53,6 +53,12 @@ public class TabCompleterManager implements TabCompleter {
         String pds = plugin.getMainPermissionsManager().getDelSpawn();
         boolean dds = plugin.getMainPermissionsManager().isDelSpawnDefault();
 
+        String pl = plugin.getMainPermissionsManager().getLobby();
+        boolean dl = plugin.getMainPermissionsManager().isLobbyDefault();
+
+        String pdl = plugin.getMainPermissionsManager().getDelLobby();
+        boolean ddl = plugin.getMainPermissionsManager().isDelLobbyDefault();
+
         boolean resetHasPermission = PlayerUtils.hasPermission(plugin, sender, preset, dreset, false);
         boolean importHasPermission = PlayerUtils.hasPermission(plugin, sender, pi, di, false);
         boolean changelogHasPermission = PlayerUtils.hasPermission(plugin, sender, pc, dc, false);
@@ -61,6 +67,8 @@ public class TabCompleterManager implements TabCompleter {
         boolean warpsHasPermission = PlayerUtils.hasPermission(plugin, sender, pw, dw, false);
         boolean spawnHasPermission = PlayerUtils.hasPermission(plugin, sender, ps, ds, false);
         boolean delSpawnHasPermission = PlayerUtils.hasPermission(plugin, sender, pds, dds, false);
+        boolean lobbyHasPermission = PlayerUtils.hasPermission(plugin, sender, pl, dl, false);
+        boolean delLobbyHasPermission = PlayerUtils.hasPermission(plugin, sender, pdl, ddl, false);
 
         List<String> mainCommands = new ArrayList<>();
         if (plugin.getMainHomeConfigManager().getConfig().contains("commands_alias.home")) {
@@ -251,6 +259,12 @@ public class TabCompleterManager implements TabCompleter {
                 || (command.getName().equalsIgnoreCase("spawn") && plugin.getMainSpawnConfigManager().isByWorld()
                 && spawnHasPermission && args.length == 1)){
             return new ArrayList<>(FileUtils.getDataNameFiles(plugin, "spawns"));
+        }
+
+        if ((command.getName().equalsIgnoreCase("dellobby") && delLobbyHasPermission && args.length == 1)
+                || (command.getName().equalsIgnoreCase("lobby") && plugin.getMainLobbyConfigManager().isMultipleLobbies()
+                && lobbyHasPermission && args.length == 1)){
+            return new ArrayList<>(FileUtils.getDataNameFiles(plugin, "lobbies"));
         }
 
         return Collections.emptyList();

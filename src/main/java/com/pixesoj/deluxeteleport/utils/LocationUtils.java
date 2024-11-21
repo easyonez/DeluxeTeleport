@@ -1,98 +1,21 @@
 package com.pixesoj.deluxeteleport.utils;
 
 import com.pixesoj.deluxeteleport.DeluxeTeleport;
-import com.pixesoj.deluxeteleport.managers.CheckEnabledManager;
-import com.pixesoj.deluxeteleport.managers.LocationsManager;
 import com.pixesoj.deluxeteleport.managers.MessagesManager;
-import com.pixesoj.deluxeteleport.managers.filesmanager.MessagesFileManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class LocationUtils {
-    public static void setLocation(DeluxeTeleport plugin, CommandSender sender, String location, String[] args, boolean isGeneral){
-        MessagesFileManager msg = plugin.getMainMessagesManager();
-        MessagesManager m;
-        String keyPath = "";
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
-        Location l = ((Player) sender).getLocation();
-        if (location.equalsIgnoreCase("lobby")){
-            m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
-            if (CheckEnabledManager.lobbyMultiple(plugin) && args.length > 0){
-                keyPath = "Lobby.Multiple." + args[0] + ".";
-            } else if (isGeneral){
-                keyPath = "Lobby.General.";
-            }
-
-            String world = ((Player) sender).getWorld().getName();
-            String message = "";
-            if (CheckEnabledManager.lobbyMultiple(plugin) && !isGeneral) {
-                message = msg.getLobbyEstablished()
-                        .replace("%world%", world)
-                        .replace("%lobby%", String.valueOf(args[0]));
-            } else {
-                message = msg.getLobbyEstablished()
-                        .replace("%world%", world)
-                        .replace("%lobby%", "general");
-            }
-            m.sendMessage(sender, message, true);
-        } else if (location.equalsIgnoreCase("spawn")){
-            m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
-            if (args.length > 0 && CheckEnabledManager.floodgateSupport(plugin, "spawn") && plugin.getMainSpawnConfigManager().isFloodgateSplitSpawn()) {
-                if (args[0].equalsIgnoreCase("java")){
-                    keyPath = "Spawn.General.Java.";
-                } else if (args[0].equalsIgnoreCase("bedrock")) {
-                    keyPath = "Spawn.General.Bedrock.";
-                }
-            } else if (CheckEnabledManager.spawnByWorld(plugin)){
-                Player player = (Player) sender;
-                keyPath = "Spawn.ByWorld." + player.getWorld().getName() + ".";
-            } else if (isGeneral){
-                keyPath = "Spawn.General.Global.";
-            }
-
-            String world = ((Player) sender).getWorld().getName();
-            String message = "";
-            if (CheckEnabledManager.spawnByWorld(plugin)) {
-                message = msg.getSpawnEstablished()
-                        .replace("%world%", world);
-            } else {
-                message = msg.getSpawnEstablished()
-                        .replace("%world%", world)
-                        .replace("%spawn%", "general");
-            }
-            m.sendMessage(sender, message, true);
-        } else if (location.equalsIgnoreCase("warp")){
-            m = new MessagesManager(plugin.getMainMessagesManager().getPrefixWarp(), plugin);
-            if (args.length > 0) {
-                keyPath = "warps." + args[0] + ".";
-            } else {
-                m.sendMessage(sender, msg.getWarpSetError(), true);
-                return;
-            }
-
-            m.sendMessage(sender, msg.getWarpSetSuccessfully().replace("%warp%", args[0]), true);
-        }
-
-        locations.set(keyPath + "world", Objects.requireNonNull(l.getWorld()).getName());
-        locations.set(keyPath + "x", l.getX());
-        locations.set(keyPath + "y", l.getY());
-        locations.set(keyPath + "z", l.getZ());
-        locations.set(keyPath + "yaw", l.getYaw());
-        locations.set(keyPath + "pitch", l.getPitch());
-        plugin.getLocationsManager().saveLocationsFile();
-    }
-
     public static Location getLocation(DeluxeTeleport plugin, String location, String type, String multiple){
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
+        FileConfiguration locations = plugin.getLocationsManager().getLocationsConfig();
         double x = 0;
         double y = 0;
         double z = 0;
@@ -140,101 +63,69 @@ public class LocationUtils {
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 
-    public static boolean isNull (DeluxeTeleport plugin, CommandSender sender, Location location, String type, String multiple, boolean senMessage){
-        MessagesFileManager msg = plugin.getMainMessagesManager();
-        if (location == null){
-            if (senMessage) {
-                switch (type) {
-                    case "lobby": {
-                        if (!plugin.getMainLobbyConfigManager().isMultipleLobbies()){
-                            multiple = "general";
-                        }
-                        com.pixesoj.deluxeteleport.managers.MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
-                        m.sendMessage(sender, msg.getLobbyNotExists()
-                                .replace("%lobby%", multiple), true);
-                        break;
-                    }
-                    case "spawn": {
-                        if (!plugin.getMainSpawnConfigManager().isByWorld()){
-                            multiple = "general";
-                        }
-                        com.pixesoj.deluxeteleport.managers.MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
-                        m.sendMessage(sender, msg.getSpawnNotExists()
-                                .replace("%spawn%", multiple), true);
-                        break;
-                    }
-                    default: {
-                    }
-                }
-            }
-            return true;
+    public static Location getDestinationPlace(DeluxeTeleport plugin, CommandSender sender, String destinationPlace, String destination){
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            destinationPlace = PlaceholderUtils.setPlaceholders(plugin, player, destinationPlace);
+            destination = PlaceholderUtils.setPlaceholders(plugin, player, destination);
         }
-        return false;
-    }
-
-    public static boolean keyPathExist(DeluxeTeleport plugin, CommandSender sender, String location, String type, String multiple, boolean sendMessage){
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
         MessagesFileManager msg = plugin.getMainMessagesManager();
         MessagesManager m;
-        if (location.equalsIgnoreCase("lobby")){
-            m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
-            if (type.equalsIgnoreCase("general")){
-                if (!locations.contains("Lobby.General")){
-                    if (sendMessage){
-                        m.sendMessage(sender, msg.getLobbyNotExists()
-                                .replace("%lobby%", "general"), true);
-                    }
-                    return false;
-                } else {
-                    return true;
+        FileManager fileManager;
+        FileConfiguration file = null;
+        UUID worldUUID;
+        World world = null;
+
+        switch (destinationPlace.toLowerCase()) {
+            case "lobby":
+                ConfigLobbyManager configLobby = plugin.getMainLobbyConfigManager();
+                m = new MessagesManager(msg.getPrefixLobby(), plugin);
+                String lobbyName = (configLobby.isMultipleLobbies() && destination != null && !destination.isEmpty()) ? destination : "general-lobby";
+                fileManager = new FileManager(lobbyName + ".yml", "data/lobbies", false, plugin);
+                file = fileManager.getConfig();
+                if (file == null || file.getString("world") == null) return null;
+                worldUUID = UUID.fromString(Objects.requireNonNull(file.getString("world")));
+                world = Bukkit.getWorld(worldUUID);
+                if (world == null) {
+                    //m.sendMessage(sender, msg.getLobbyExeption().replace("%lobby%", lobbyName), true);
+                    return null;
                 }
-            } else if (type.equalsIgnoreCase("multiple")) {
-                if (!locations.contains("Lobby.Multiple." + multiple)){
-                    if (sendMessage){
-                        m.sendMessage(sender, msg.getLobbyNotExists()
-                                .replace("%lobby%", multiple), true);
-                    }
-                    return false;
-                } else {
-                    return true;
+                break;
+            case "spawn":
+                ConfigSpawnManager configSpawn = plugin.getMainSpawnConfigManager();
+                m = new MessagesManager(msg.getPrefixSpawn(), plugin);
+                String spawnName = (configSpawn.isByWorld() && destination != null && !destination.isEmpty()) ? destination : "general-spawn";
+                fileManager = new FileManager(spawnName + ".yml", "data/spawns", false, plugin);
+                file = fileManager.getConfig();
+                if (file == null || file.getString("world") == null) return null;
+                worldUUID = UUID.fromString(Objects.requireNonNull(file.getString("world")));
+                world = Bukkit.getWorld(worldUUID);
+                if (world == null) {
+                    m.sendMessage(sender, msg.getSpawnExeption().replace("%spawn%", spawnName), true);
+                    return null;
                 }
-            }
-        } else if (location.equalsIgnoreCase("spawn")){
-            m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
-            if (type.equalsIgnoreCase("general")){
-                if (!locations.contains("Spawn.General.Global")){
-                    if (sendMessage){
-                        m.sendMessage(sender, msg.getSpawnNotExists()
-                                .replace("%spawn%", "general"), true);
-                    }
-                    return false;
-                } else {
-                    return true;
+                break;
+            case "warp":
+                m = new MessagesManager(msg.getPrefixWarp(), plugin);
+                fileManager = new FileManager( destination + ".yml", "data/warps", false, plugin);
+                file = fileManager.getConfig();
+                if (file == null || file.getString("world") == null) return null;
+                worldUUID = UUID.fromString(Objects.requireNonNull(file.getString("world")));
+                world = Bukkit.getWorld(worldUUID);
+                if (world == null) {
+                    m.sendMessage(sender, msg.getWarpExeption().replace("%warp%", destination), true);
+                    return null;
                 }
-            } else if (type.equalsIgnoreCase("byworld")) {
-                if (!locations.contains("Spawn.ByWorld." + multiple)){
-                    if (sendMessage){
-                        m.sendMessage(sender, msg.getSpawnNotExists()
-                                .replace("%spawn%", multiple), true);
-                    }
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        } else if (location.equalsIgnoreCase("warp")){
-            m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
-            if (!locations.contains("warps." + multiple)){
-                if (sendMessage){
-                    m.sendMessage(sender, msg.getWarpNotExist()
-                            .replace("%warp%", multiple), true);
-                }
-                return false;
-            } else {
-                return true;
-            }
+                break;
         }
-        return false;
+
+        if (file == null) return null;
+        double x = file.getDouble("x");
+        double y = file.getDouble("y");
+        double z = file.getDouble("z");
+        float yaw = file.getInt("yaw");
+        float pitch = file.getInt("pitch");
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     public static Location stringToLocation(String locationString) {

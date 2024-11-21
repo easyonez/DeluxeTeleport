@@ -27,4 +27,13 @@ public class FileUtils {
 
         return list;
     }
+
+    public static boolean exist(DeluxeTeleport plugin, String type, String name) {
+        File folder = new File(plugin.getDataFolder(), "data/" + type);
+        if (folder.exists() && folder.isDirectory()) {
+            File file = new File(folder, name + ".yml");
+            return file.exists();
+        }
+        return false;
+    }
 }

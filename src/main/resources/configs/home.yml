@@ -102,9 +102,10 @@ teleport_conditions:
       amount: 500
       enabled: false
       deny_actions:
-        insuficient:
-          type: message
-          message: "%prefix_home%&cYou don't have enough money, you need 500/%vault_money%"
+        actions:
+          insuficient:
+            type: message
+            message: "%prefix_home%&cYou don't have enough money, you need 500/%vault_money%"
 
 # Here you can perform actions before, during, after and when canceling the delay,
 # you can even add conditions to execute only in certain cases. You can consult the documentation here:

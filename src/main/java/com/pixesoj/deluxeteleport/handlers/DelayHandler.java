@@ -9,41 +9,41 @@ import org.bukkit.entity.Player;
 import java.util.Objects;
 
 public class DelayHandler {
-    public static void lobby(DeluxeTeleport plugin, Player player, DelayManager delayManager){
-        MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
+    public static void lobby(DeluxeTeleport plugin, Player player, DelayManager delayManager, String lobbyName){
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
         MessagesFileManager msg = plugin.getMainMessagesManager();
         if (!plugin.playerInDelay(player)) {
             plugin.addPlayerTeleport(player);
-            delayManager.lobby();
+            delayManager.lobby(lobbyName);
         } else {
             m.sendMessage(player, msg.getLobbyInTeleport(), true);
         }
     }
 
-    public static void lobbyProxy(DeluxeTeleport plugin, Player player, DelayManager delayManager){
-        MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
+    public static void lobbyProxy(DeluxeTeleport plugin, Player player, DelayManager delayManager, String lobbyName){
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
         MessagesFileManager msg = plugin.getMainMessagesManager();
         if (!plugin.playerInDelay(player)) {
             plugin.addPlayerTeleport(player);
-            delayManager.lobbyProxy();
+            delayManager.lobbyProxy(lobbyName);
         } else {
             m.sendMessage(player, msg.getLobbyInTeleport(), true);
         }
     }
 
-    public static void spawn(DeluxeTeleport plugin, Player player, DelayManager delayManager){
-        MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
+    public static void spawn(DeluxeTeleport plugin, Player player, DelayManager delayManager, String spawnName){
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
         MessagesFileManager msg = plugin.getMainMessagesManager();
         if (!plugin.playerInDelay(player)) {
             plugin.addPlayerTeleport(player);
-            delayManager.spawn();
+            delayManager.spawn(spawnName);
         } else {
             m.sendMessage(player, msg.getSpawnInTeleport(), true);
         }
     }
 
     public static void tpa (DeluxeTeleport plugin, Player player, Player targetPlayer, DelayManager delayManager){
-        MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixTPA(), plugin);
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixTPA(), plugin);
         MessagesFileManager msg = plugin.getMainMessagesManager();
         boolean defaultMessage = plugin.getMainTPAConfigManager().getConfig().getBoolean("actions.default_messages", true);
         if (!plugin.playerInDelay(targetPlayer)) {
@@ -62,7 +62,7 @@ public class DelayHandler {
     }
 
     public static void home (DeluxeTeleport plugin, Player player, DelayManager delayManager, String home){
-        MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixHome(), plugin);
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixHome(), plugin);
         MessagesFileManager msg = plugin.getMainMessagesManager();
         if (!plugin.playerInDelay(player)) {
             plugin.addPlayerTeleport(player);

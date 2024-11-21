@@ -7,6 +7,7 @@ import com.pixesoj.deluxeteleport.managers.filesmanager.MessagesFileManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.PermissionsManager;
 import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigSpawnManager;
 import com.pixesoj.deluxeteleport.handlers.*;
+import com.pixesoj.deluxeteleport.utils.FileUtils;
 import com.pixesoj.deluxeteleport.utils.LocationUtils;
 import com.pixesoj.deluxeteleport.utils.PlayerUtils;
 import com.pixesoj.deluxeteleport.utils.TimeUtils;
@@ -37,7 +38,6 @@ public class SpawnCmd implements CommandExecutor {
     private ActionsManager spawnActionsManager;
     private Location location;
     private String targetPlayerName;
-    private String spawn;
 
     public SpawnCmd(DeluxeTeleport plugin) {
         this.plugin = plugin;
@@ -57,9 +57,7 @@ public class SpawnCmd implements CommandExecutor {
     }
 
     public void mainCommand(@NotNull CommandSender sender, String[] args) {
-        MessagesManager m = new com.pixesoj.deluxeteleport.managers.MessagesManager(plugin.getMainMessagesManager().getPrefixSpawn(), plugin);
         PermissionsManager perm = plugin.getMainPermissionsManager();
-
         if (!CheckEnabledManager.spawn(plugin, sender, true)) return;
         if (!PlayerUtils.hasPermission(plugin, sender, perm.getSpawn(), perm.isSpawnDefault(), true)) return;
         if (!PlayerUtils.isPlayer(plugin, sender, false)) {
@@ -157,7 +155,6 @@ public class SpawnCmd implements CommandExecutor {
                 targetPlayerName = args[1];
                 isOther = true;
             }
-
         } else {
             if (isSpawnOtherPermission && args.length > 0) {
                 targetPlayerName = args[0];
@@ -168,34 +165,23 @@ public class SpawnCmd implements CommandExecutor {
         FileManager fileManager = new FileManager(spawnName + ".yml", "data/spawns", false, plugin);
         FileConfiguration spawn = fileManager.getConfig();
 
-        spawnActionsManager = new ActionsManager(plugin, spawn, "teleport_actions");
-        spawnConditionsManager = new ConditionsManager(plugin, spawn, "conditions_teleport");
-
-        try {
-            UUID worldUUID = UUID.fromString(spawn.getString("world", ""));
-            World world = Bukkit.getWorld(worldUUID);
-            if (world == null) {
-                m.sendMessage(player, msg.getSpawnExeption().replace("%warp%", spawnName), true);
-                return;
-            }
-            double x = spawn.getDouble("x");
-            double y = spawn.getDouble("y");
-            double z = spawn.getDouble("z");
-            float yaw = spawn.getInt("yaw");
-            float pitch = spawn.getInt("pitch");
-            location = new Location(world, x, y, z, yaw, pitch);
-        } catch (NullPointerException | IllegalArgumentException e){
-            m.sendMessage(player, msg.getSpawnExeption().replace("%warp%", spawnName), true);
+        if (!FileUtils.exist(plugin, "spawns", spawnName)) {
+            m.sendMessage(sender, msg.getSpawnNotExists().replace("%spawn%", spawnName), true);
             return;
         }
 
+        spawnActionsManager = new ActionsManager(plugin, spawn, "teleport_actions");
+        spawnConditionsManager = new ConditionsManager(plugin, spawn, "teleport_conditions");
+
+        location = LocationUtils.getDestinationPlace(plugin, player, "spawn", spawnName);
+        if (location == null) return;
         Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
         if (!PlayerUtils.isOnline(plugin, sender, targetPlayer, false)) {
             m.sendMessage(sender, msg.getGlobalPlayerOffline().replace("%player%", targetPlayerName), true);
             return;
         }
 
-        if (!conditionsManager.isCondition(targetPlayer) && !spawnConditionsManager.isCondition(targetPlayer)) {
+        if (!conditionsManager.isCondition(targetPlayer) || !spawnConditionsManager.isCondition(targetPlayer)) {
             return;
         }
 
@@ -203,7 +189,7 @@ public class SpawnCmd implements CommandExecutor {
         if (!isOther && configSpawn.isTeleportDelayEnabled() && !isBypassDelayPermission) {
             int delay = TimeUtils.timerConverter("ticks", configSpawn.getTeleportDelay());
             DelayManager delayManager = new DelayManager(plugin, delay, player, location);
-            DelayHandler.spawn(plugin, targetPlayer, delayManager);
+            DelayHandler.spawn(plugin, targetPlayer, delayManager, spawnName);
             actionsManager.general("before_delay", targetPlayer);
             spawnActionsManager.general("before_delay", targetPlayer);
             if (defaultMessages) m.sendMessage(targetPlayer, msg.getSpawnDelayInTeleport(), true);

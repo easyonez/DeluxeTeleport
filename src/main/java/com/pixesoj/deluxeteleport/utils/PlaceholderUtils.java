@@ -9,6 +9,7 @@ import com.pixesoj.deluxeteleport.managers.dependencies.DependencyManager;
 import com.pixesoj.deluxeteleport.model.internal.UpdateCheckResult;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -33,9 +34,22 @@ public class PlaceholderUtils {
         int tpaDelayTime = TimeUtils.timerConverter("ticks", plugin.getMainTPAConfigManager().getDelayTime());
         int warpDelayTime = TimeUtils.timerConverter("ticks", plugin.getMainWarpConfigManager().getTeleportDelay());
 
+        World world = player.getWorld();
+        World.Environment worldEnvironment = world.getEnvironment();
+
         text = text
                 .replace("%player%", player.getName())
                 .replace("%player_name%", player.getDisplayName())
+                .replace("%player_displayname%", player.getDisplayName())
+                .replace("%player_world%", Objects.requireNonNull(player.getLocation().getWorld()).getName())
+                .replace("%player_world_uuid%", player.getLocation().getWorld().getUID().toString())
+                .replace("%player_world_type%", worldEnvironment.name())
+                .replace("%player_x%", String.valueOf(player.getLocation().getX()))
+                .replace("%player_y%", String.valueOf(player.getLocation().getY()))
+                .replace("%player_z%", String.valueOf(player.getLocation().getZ()))
+                .replace("%player_yaw%", String.valueOf(player.getLocation().getYaw()))
+                .replace("%player_pitch%", String.valueOf(player.getLocation().getPitch()))
+
                 .replace("%prefix%", plugin.getMainMessagesManager().getPrefix())
                 .replace("%prefix_global%", plugin.getMainMessagesManager().getPrefix())
                 .replace("%prefix_spawn%", plugin.getMainMessagesManager().getPrefixSpawn())

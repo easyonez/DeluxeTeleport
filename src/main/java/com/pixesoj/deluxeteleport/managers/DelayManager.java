@@ -37,9 +37,11 @@ public class DelayManager {
         this.l = l;
     }
 
-    public void lobby(){
+    public void lobby(String lobbyName){
+        FileManager fileManager = new FileManager(lobbyName + ".yml", "data/lobbies", false, plugin);
+        FileConfiguration lobbyData = fileManager.getConfig();
         boolean defaultMessage = plugin.getMainLobbyConfigManager().getConfig().getBoolean("actions.default_messages", true);
-        ActionsManager actionsManager = new ActionsManager(plugin, plugin.getMainLobbyConfigManager().getConfig(), "teleport_actions");
+        ActionsManager actionsManager = new ActionsManager(plugin, lobbyData, "teleport_actions");
         boolean cancelOnMove = plugin.getMainLobbyConfigManager().isTeleportDelayCancelOnMove();
         BukkitScheduler sh = Bukkit.getServer().getScheduler();
         delayLobbyMap.put(player.getName(), this);
@@ -85,9 +87,11 @@ public class DelayManager {
         }, 0L, 20L).getTaskId();
     }
 
-    public void lobbyProxy(){
+    public void lobbyProxy(String lobbyName){
+        FileManager fileManager = new FileManager(lobbyName + ".yml", "data/lobbies", false, plugin);
+        FileConfiguration lobbyData = fileManager.getConfig();
         boolean defaultMessage = plugin.getMainLobbyConfigManager().getConfig().getBoolean("actions.default_messages", true);
-        ActionsManager actionsManager = new ActionsManager(plugin, plugin.getMainLobbyConfigManager().getConfig(), "teleport_actions");
+        ActionsManager actionsManager = new ActionsManager(plugin, lobbyData, "teleport_actions");
         boolean cancelOnMove = plugin.getMainLobbyConfigManager().isTeleportDelayCancelOnMove();
         BukkitScheduler sh = Bukkit.getServer().getScheduler();
         delayLobbyMap.put(player.getName(), this);
@@ -132,10 +136,12 @@ public class DelayManager {
         }, 0L, 20L).getTaskId();
     }
 
-    public void spawn(){
+    public void spawn(String spawnName){
+        FileManager fileManager = new FileManager(spawnName + ".yml", "data/spawns", false, plugin);
+        FileConfiguration spawnData = fileManager.getConfig();
         boolean defaultMessage = plugin.getMainSpawnConfigManager().getConfig().getBoolean("actions.default_messages", true);
         ActionsManager actionsManager = new ActionsManager(plugin, plugin.getMainSpawnConfigManager().getConfig(), "teleport_actions");
-        ActionsManager spawnActionsManager = new ActionsManager(plugin, plugin.getMainSpawnConfigManager().getConfig(), "teleport_actions");
+        ActionsManager spawnActionsManager = new ActionsManager(plugin, spawnData, "teleport_actions");
         boolean cancelOnMove = plugin.getMainSpawnConfigManager().isTeleportDelayCancelOnMove();
         BukkitScheduler sh = Bukkit.getServer().getScheduler();
         delaySpawnMap.put(player.getName(), this);

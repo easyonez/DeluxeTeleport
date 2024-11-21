@@ -122,9 +122,8 @@ lobby:
   in_teleport: "&cYou are already being teleported to the lobby."
   delay_in_teleport: "&aTeleporting to the lobby in &e%lobby_delay_time_formatted%&a."
   canceled_move: "&cTeleport to the lobby canceled due to movement."
-  deleted_canceled: "&6Confirmation time expired. The lobby deletion has been canceled."
   deleted_successfully: "&aThe lobby &b%lobby% &awas successfully deleted."
-  deleted_error: "&cYou must specify a spawn in order to delete it."
+  deleted_error: "&cYou must specify a lobby in order to delete it."
 
 spawn:
   not_allowed: "&cSpawn is not enabled."

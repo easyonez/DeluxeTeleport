@@ -93,6 +93,7 @@ public class MessagesFileManager {
     private String LobbyDelayInTeleport;
     private String LobbyCanceledMove;
     private String LobbyDeletedSuccessfully;
+    private String LobbyDeletedError;
 
 
     private String SpawnNotEnabled;
@@ -355,8 +356,8 @@ public class MessagesFileManager {
             changed = setMessage(changed, "lobby.in_teleport", "&cYa estás siendo teletransportado al lobby.");
             changed = setMessage(changed, "lobby.delay_in_teleport", "&aTeletransportándote al lobby en &e%time% &asegundos.");
             changed = setMessage(changed, "lobby.canceled_move", "&cTeletransporte al lobby cancelado por movimiento.");
-            changed = setMessage(changed, "lobby.deleted_canceled", "&6Tiempo de confirmación agotado. La eliminación del lobby ha sido cancelada.");
             changed = setMessage(changed, "lobby.deleted_successfully", "&aEl lobby &b%lobby% &ase ha eliminado correctamente.");
+            changed = setMessage(changed, "lobby.deleted_error", "&cDebes especificar un lobby para poder eliminarlo.");
 
 
             changed = setMessage(changed, "spawn.not_allowed", "&cEl spawn no está habilitado.");
@@ -594,8 +595,8 @@ public class MessagesFileManager {
             changed = setMessage(changed, "lobby.in_teleport", "&cYou are already being teleported to the lobby.");
             changed = setMessage(changed, "lobby.delay_in_teleport", "&aTeleporting to the lobby in &e%time% &aseconds.");
             changed = setMessage(changed, "lobby.canceled_move", "&cLobby teleport canceled due to movement.");
-            changed = setMessage(changed, "lobby.deleted_canceled", "&6Confirmation time expired. Lobby deletion canceled.");
             changed = setMessage(changed, "lobby.deleted_successfully", "&aLobby &b%lobby% &adeleted successfully.");
+            changed = setMessage(changed, "lobby.deleted_error", "&cYou must specify a lobby in order to delete it.");
 
 
             changed = setMessage(changed, "spawn.not_allowed", "&cSpawn is not enabled.");
@@ -863,6 +864,7 @@ public class MessagesFileManager {
         LobbyDelayInTeleport = messages.getString("lobby.delay_in_teleport");
         LobbyCanceledMove = messages.getString("lobby.canceled_move");
         LobbyDeletedSuccessfully = messages.getString("lobby.deleted_successfully");
+        LobbyDeletedError = messages.getString("lobby.deleted_error");
 
         SpawnNotEnabled = messages.getString("spawn.not_allowed");
         SpawnNotExists = messages.getString("spawn.not_exists");
@@ -1622,6 +1624,10 @@ public class MessagesFileManager {
 
     public String getSpawnExeption() {
         return SpawnExeption;
+    }
+
+    public String getLobbyDeletedError() {
+        return LobbyDeletedError;
     }
 }
 

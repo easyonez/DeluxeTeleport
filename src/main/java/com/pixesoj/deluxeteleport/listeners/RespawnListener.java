@@ -27,47 +27,14 @@ public class RespawnListener implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         ConfigManager config = plugin.getMainConfigManager();
-        ConfigSpawnManager spawnC = plugin.getMainSpawnConfigManager();
-        ConfigLobbyManager lobbyC = plugin.getMainLobbyConfigManager();
-
+        if (!config.isTeleportOnRespawnEnabled()) return;
         ConditionsManager conditionsManager = new ConditionsManager(plugin, config.getConfig(), "teleport_on_respawn.teleport_conditions");
         if (!conditionsManager.isCondition(player)) return;
-
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (config.isTeleportOnRespawnEnabled()){
-                if (config.getTeleportOnRespawnIgnoredWorlds().contains(player.getWorld().getName())) return;
-                if (!config.isTeleportOnRespawnIgnoreBed()){
-                    if (player.getBedSpawnLocation() != null) return;
-                }
-                String destination1;
-                String destination2 = "general";
-                String destination3 = null;
-                if (config.getTeleportOnRespawnDestinationPlace().equalsIgnoreCase("spawn")){
-                    destination1 = "spawn";
-                    if (spawnC.isByWorld()){
-                        destination2 = "byworld";
-                        destination3 = config.getTeleportOnRespawnDestination();
-                    }
-                } else if (config.getTeleportOnRespawnDestinationPlace().equalsIgnoreCase("lobby")) {
-                    destination1 = "lobby";
-                    if (lobbyC.isMultipleLobbies()){
-                        destination2 = "multiple";
-                        destination3 = config.getTeleportOnRespawnDestination();
-                    }
-
-                } else {
-                    return;
-                }
-                Location location = LocationUtils.getLocation(plugin, destination1, destination2, destination3);
-                if (LocationUtils.isNull(plugin, Bukkit.getConsoleSender(), location, destination1, destination3, true)) return;
-                assert location != null;
-                player.teleport(location);
-
-                ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_respawn.teleport_actions");
-                actionsManager.general("none", player);
-            }
-        }, 1L);
-
+        Location location = LocationUtils.getDestinationPlace(plugin, player, config.getTeleportOnRespawnDestinationPlace(), config.getTeleportOnRespawnDestination());
+        if (location == null) return;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 5L);
+        ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_respawn.teleport_actions");
+        actionsManager.general("none", player);
     }
 }
 

@@ -151,9 +151,10 @@ teleport_conditions:
       level: true
       enabled: false
       deny_actions:
-        insuficient:
-          type: message
-          message: '%prefix_spawn%&cYou do not have the necessary EXP levels &8(10&8)'
+        actions:
+          insuficient:
+            type: message
+            message: '%prefix_spawn%&cYou do not have the necessary EXP levels &8(10&8)'
 
 # Here you can perform actions before, during, after and when canceling the delay,
 # you can even add conditions to execute only in certain cases. You can consult the documentation here:

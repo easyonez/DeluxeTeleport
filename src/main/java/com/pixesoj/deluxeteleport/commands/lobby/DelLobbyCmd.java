@@ -1,7 +1,7 @@
 package com.pixesoj.deluxeteleport.commands.lobby;
 
 import com.pixesoj.deluxeteleport.DeluxeTeleport;
-import com.pixesoj.deluxeteleport.managers.filesmanager.ConfigLobbyManager;
+import com.pixesoj.deluxeteleport.managers.filesmanager.*;
 import com.pixesoj.deluxeteleport.managers.MessagesManager;
 import com.pixesoj.deluxeteleport.managers.CheckEnabledManager;
 import com.pixesoj.deluxeteleport.utils.LocationUtils;
@@ -11,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class DelLobbyCmd implements CommandExecutor {
     private final DeluxeTeleport plugin;
@@ -26,35 +28,30 @@ public class DelLobbyCmd implements CommandExecutor {
     }
 
     public void mainCommand(@NotNull CommandSender sender, String[] args) {
-        ConfigLobbyManager lobbyC = plugin.getMainLobbyConfigManager();
+        ConfigLobbyManager lobbyConfig = plugin.getMainLobbyConfigManager();
+        PermissionsManager perm = plugin.getMainPermissionsManager();
+        MessagesFileManager msg = plugin.getMainMessagesManager();
+        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
+
         if (!CheckEnabledManager.lobby(plugin, sender, true)) return;
-        if (!PlayerUtils.hasPermission(plugin, sender, plugin.getMainPermissionsManager().getDelLobby(),
-                plugin.getMainPermissionsManager().isDelLobbyDefault(), true)) return;
-        if (args.length == 0 || !lobbyC.isMultipleLobbies()) {
-            deleteGeneralLobby(sender);
-        } else {
-            String lobby = args[0];
-            deleteSpecificLobby(sender, lobby);
+        if (!PlayerUtils.hasPermission(plugin, sender, perm.getDelLobby(), perm.isDelLobbyDefault(), true)) return;
+
+        boolean isMultiple = lobbyConfig.isMultipleLobbies();
+        if (isMultiple && args.length < 1){
+            m.sendMessage(sender, msg.getLobbyDeletedError(), true);
+            return;
         }
-    }
 
-    private void deleteGeneralLobby(CommandSender sender) {
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
-        if (!LocationUtils.keyPathExist(plugin, sender, "lobby", "general", null, true)) return;
-        locations.set("Lobby.General", null);
-        plugin.getLocationsManager().saveLocationsFile();
-        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
-        m.sendMessage(sender, plugin.getMainMessagesManager().getLobbyDeletedSuccessfully()
-                .replace("%lobby%", "general"), true);
-    }
+        String lobbyName = isMultiple ? args[0] : "general-lobby";
+        FileManager fileManager = new FileManager(lobbyName + ".yml", "data/lobbies", false, plugin);
+        File lobby = fileManager.getFile();
 
-    private void deleteSpecificLobby(CommandSender sender, String lobbyName) {
-        FileConfiguration locations = plugin.getLocationsManager().getLocationsFile();
-        if (!LocationUtils.keyPathExist(plugin, sender, "lobby", "multiple", lobbyName, true)) return;
-        locations.set("Lobby.Multiple." + lobbyName, null);
-        plugin.getLocationsManager().saveLocationsFile();
-        MessagesManager m = new MessagesManager(plugin.getMainMessagesManager().getPrefixLobby(), plugin);
-        m.sendMessage(sender, plugin.getMainMessagesManager().getLobbyDeletedSuccessfully()
-                .replace("%lobby%", lobbyName), true);
+        if (lobby.exists()) {
+            if (lobby.delete()) {
+                m.sendMessage(sender, msg.getLobbyDeletedSuccessfully().replace("%lobby%", lobbyName), true);
+            }
+        } else {
+            m.sendMessage(sender, msg.getLobbyNotExists().replace("%lobby%", lobbyName), true);
+        }
     }
 }

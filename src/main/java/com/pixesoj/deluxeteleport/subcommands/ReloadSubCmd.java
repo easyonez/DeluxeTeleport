@@ -42,7 +42,6 @@ public class ReloadSubCmd implements SubCommand {
             plugin.getMainLobbyConfigManager().reloadConfig();
             plugin.getMainSpawnConfigManager().reloadConfig();
             plugin.getMainPermissionsManager().reloadPermissions();
-            plugin.getLocationsManager().reloadLocationsFile();
             plugin.getMainTPAConfigManager().reloadConfig();
             plugin.getMainHomeConfigManager().reloadConfig();
             plugin.getPlaceholdersManager().reloadConfig();

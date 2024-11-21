@@ -109,14 +109,13 @@ teleport_on_join:
   # Adjustments to where the player will be teleported to when joining
   destination_place_settings:
     # Where will the player be teleported to when joining?
-    # Available options: Spawn, Lobby
+    # Available options: Spawn, Lobby, Warp
     destination_place: Spawn
-    # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
-    # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+    # Specifies the world, lobby, or warp the player will be teleported to if necessary.
     destination: world
 
   teleport_conditions:
-    minimum_requirements: 1
+    minimum_requirements: 0
     conditions: [ ]
 
   teleport_actions:
@@ -129,14 +128,13 @@ teleport_on_join:
     # Destination settings where the player will be transported to for the first time
     destination_place_settings:
       # Destination where the player will be transported to for the first time
-      # Available options: Spawn, Lobby
+      # Available options: Spawn, Lobby, Warp
       destination_place: Spawn
-      # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
-      # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+      # Specifies the world, lobby, or warp the player will be teleported to if necessary.
       destination: world
 
     teleport_conditions:
-      minimum_requirements: 1
+      minimum_requirements: 0
       conditions: [ ]
 
     teleport_actions:
@@ -156,22 +154,17 @@ teleport_on_void:
   # Worlds where this function will not be enabled
   ignored_worlds:
     - IgnoredWorld
-  # If Blindness effect was granted when teleporting
-  blindness: false
-  # How many seconds will the effect last?
-  blindness_time: 3
 
   # Settings for where the player will be transported
   destination_place_settings:
     # Where will the player be teleported to?
-    # Available options: Spawn, Lobby
+    # Available options: Spawn, Lobby, Warp
     destination_place: Spawn
-    # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
-    # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+    # Specifies the world, lobby, or warp the player will be teleported to if necessary.
     destination: world
 
   teleport_conditions:
-    minimum_requirements: 1
+    minimum_requirements: 0
     conditions: []
 
   teleport_actions:
@@ -199,14 +192,13 @@ teleport_on_respawn:
   # Adjustments to where the player will go when respawning
   destination_place_settings:
     # Where will the player be teleported to?
-    # Available options: Spawn, Lobby
+    # Available options: Spawn, Lobby, Warp
     destination_place: Spawn
-    # In case destination_place is lobby and multiple_lobbies is true then this is the lobby that will be taken into account
-    # In case destination_place is spawn and by_world is true then this is the spawn that will be taken into account
+    # Specifies the world, lobby, or warp the player will be teleported to if necessary.
     destination: world
 
   teleport_conditions:
-    minimum_requirements: 1
+    minimum_requirements: 0
     conditions: [ ]
 
   teleport_actions:

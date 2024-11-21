@@ -66,76 +66,26 @@ public class JoinListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void teleportOnJoin (PlayerJoinEvent event){
         ConfigManager config = plugin.getMainConfigManager();
-        ConfigSpawnManager spawnC = plugin.getMainSpawnConfigManager();
-        ConfigLobbyManager lobbyC = plugin.getMainLobbyConfigManager();
         Player player = event.getPlayer();
-        String destination1;
-        String destination2 = "general";
-        String destination3 = null;
-
-        ConditionsManager conditionsManager = new ConditionsManager(plugin, config.getConfig(), "teleport_on_join.teleport_conditions");
-        if (!conditionsManager.isCondition(player)) return;
-
         if (event.getPlayer().hasPlayedBefore()) {
             if (config.isTeleportOnJoinEnabled()){
-                if (config.getTeleportOnJoinDestinationPlace().equalsIgnoreCase("spawn")){
-                    destination1 = "spawn";
-                    if (spawnC.isByWorld()){
-                        destination2 = "byworld";
-                        destination3 = config.getTeleportOnJoinDestination();
-                    }
-                } else if (config.getTeleportOnJoinDestinationPlace().equalsIgnoreCase("lobby")) {
-                    destination1 = "lobby";
-                    if (lobbyC.isMultipleLobbies()){
-                        destination2 = "multiple";
-                        destination3 = config.getTeleportOnJoinDestination();
-                    }
-                } else {
-                    return;
-                }
-
-                Location location = LocationUtils.getLocation(plugin, destination1, destination2, destination3);
-                if (LocationUtils.isNull(plugin, Bukkit.getConsoleSender(), location, destination1, destination3, true)) return;
-                assert location != null;
-                player.teleport(location);
-
+                ConditionsManager conditionsManager = new ConditionsManager(plugin, config.getConfig(), "teleport_on_join.teleport_conditions");
+                if (!conditionsManager.isCondition(player)) return;
+                Location location = LocationUtils.getDestinationPlace(plugin, player, config.getTeleportOnJoinDestinationPlace(), config.getTeleportOnJoinDestination());
+                if (location == null) return;
+                Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 5L);
                 ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_join.teleport_actions");
                 actionsManager.general("none", player);
             }
         } else {
-            conditionsManager = new ConditionsManager(plugin, config.getConfig(), "teleport_on_join.only_first_join.teleport_conditions");
-            if (!conditionsManager.isCondition(player)) return;
-
             if (config.isTeleportOnFirstJoinJoinEnabled()) {
-                if (config.getTeleportOnFirstJoinDestinationPlace().equalsIgnoreCase("spawn")) {
-                    destination1 = "spawn";
-                    if (spawnC.isByWorld()) {
-                        destination2 = "byworld";
-                        destination3 = config.getTeleportOnFirstJoinDestination();
-                    }
-                } else if (config.getTeleportOnFirstJoinDestinationPlace().equalsIgnoreCase("lobby")) {
-                    destination1 = "lobby";
-                    if (lobbyC.isMultipleLobbies()) {
-                        destination2 = "multiple";
-                        destination3 = config.getTeleportOnFirstJoinDestination();
-                    }
-                } else {
-                    return;
-                }
-
-                Location location = LocationUtils.getLocation(plugin, destination1, destination2, destination3);
-                if (LocationUtils.isNull(plugin, Bukkit.getConsoleSender(), location, destination1, destination3, true)) return;
-                assert location != null;
-
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_join.only_first_join.teleport_actions");
-                        actionsManager.general("none", player);
-
-                        player.teleport(location);
-                    }
-                }.runTaskLater(plugin, 5L);
+                ConditionsManager conditionsManager = new ConditionsManager(plugin, config.getConfig(), "teleport_on_join.only_first_join.teleport_conditions");
+                if (!conditionsManager.isCondition(player)) return;
+                Location location = LocationUtils.getDestinationPlace(plugin, player, config.getTeleportOnFirstJoinDestinationPlace(), config.getTeleportOnFirstJoinDestination());
+                if (location == null) return;
+                Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 5L);
+                ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_join.only_first_join.teleport_actions");
+                actionsManager.general("none", player);
             }
         }
     }

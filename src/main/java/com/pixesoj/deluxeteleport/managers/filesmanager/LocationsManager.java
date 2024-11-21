@@ -1,4 +1,4 @@
-package com.pixesoj.deluxeteleport.managers;
+package com.pixesoj.deluxeteleport.managers.filesmanager;
 
 import com.pixesoj.deluxeteleport.DeluxeTeleport;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,15 +17,6 @@ public class LocationsManager {
         this.plugin = plugin;
     }
 
-    public void loadLocationsFile() {
-        file = new File(plugin.getDataFolder(), fileName);
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            plugin.saveResource(fileName, false);
-        }
-        fileConfiguration = YamlConfiguration.loadConfiguration(file);
-    }
-
     public void saveLocationsFile() {
         if (fileConfiguration != null && file != null) {
             try {
@@ -36,18 +27,11 @@ public class LocationsManager {
         }
     }
 
-    public FileConfiguration getLocationsFile() {
-        if (fileConfiguration == null) {
-            loadLocationsFile();
-        }
+    public FileConfiguration getLocationsConfig() {
         return fileConfiguration;
     }
 
-    public void reloadLocationsFile() {
-        if (file != null) {
-            fileConfiguration = YamlConfiguration.loadConfiguration(file);
-        } else {
-            loadLocationsFile();
-        }
+    public File getLocationsFile(){
+        return file;
     }
 }

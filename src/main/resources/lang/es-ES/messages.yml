@@ -125,7 +125,7 @@ lobby:
   in_teleport: "&cYa estás siendo teletransportado al lobby."
   delay_in_teleport: "&aTeletransportando al lobby en &e%lobby_delay_time_formatted%&a."
   canceled_move: "&cTeletransporte al lobby cancelado por movimiento."
-  deleted_canceled: "&6Tiempo de confirmación agotado. La eliminación del lobby ha sido cancelada."
+  deleted_error: "&cDebes especificar un lobby para poder eliminarlo."
   deleted_successfully: "&aSe ha eliminado el lobby &b%lobby% &acorrectamente."
 
 spawn:
