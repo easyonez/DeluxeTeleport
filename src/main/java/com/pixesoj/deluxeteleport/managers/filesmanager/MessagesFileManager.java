@@ -243,7 +243,6 @@ public class MessagesFileManager {
         boolean changed = addMissingFields(config, config);
         String lang = plugin.getMainConfigManager().getConfig().getString("lang", "en-EN");
 
-        changed = setMessage(changed, "messages_version", plugin.version);
         changed = setMessage(changed, "prefix.global", "&bDeluxeTeleport &8» ");
         changed = setMessage(changed, "prefix.lobby", "&bLobby &8» ");
         changed = setMessage(changed, "prefix.spawn", "&bSpawn &8» ");
@@ -482,7 +481,6 @@ public class MessagesFileManager {
             changed = setMessage(changed, "warps.other_teleported", "&aTeletransportado a &b%player% &aa &b%warp%.");
             changed = setMessage(changed, "warps.other_teleport", "&aHas sido teletransportado a &b%warp% &apor &b%sender%.");
             changed = setMessage(changed, "warps.no_warps", "&cNo existe ningun warp.");
-            changed = setMessage(changed, "warps.warps_list", "&aWarps: &f%warp%");
 
         } else {
             changed = setMessage(changed, "variables.enabled", "&aEnabled");
@@ -721,8 +719,8 @@ public class MessagesFileManager {
             changed = setMessage(changed, "warps.other_teleported", "&aTeleported to &b%player% &aat &b%warp%.");
             changed = setMessage(changed, "warps.other_teleport", "&aYou have been teleported to &b%warp% &aby &b%sender%.");
             changed = setMessage(changed, "warps.no_warps", "&cThere are no warps.");
-            changed = setMessage(changed, "warps.warps_list", "&aWarps: &f%warp%");
         }
+        changed = setMessage(changed, "warps.warps_list", "&aWarps: &f%warp%");
 
         ServerVersion serverVersion = ServerInfo.getServerVersion();
         /*if (ServerVersion.serverVersionGreaterEqualThan(serverVersion, ServerVersion.v1_18_1)) {

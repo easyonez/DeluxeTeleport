@@ -106,7 +106,7 @@ public class DelayManager {
                     Bukkit.getScheduler().cancelTask(TaskID);
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         BungeeMessagingManager bungeeMessagingManager = new BungeeMessagingManager(plugin);
-                        bungeeMessagingManager.sendToServer(player, player, plugin.getMainLobbyConfigManager().getSenderServer(), false);
+                        bungeeMessagingManager.sendToServer(player, plugin.getMainLobbyConfigManager().getSenderServer());
                         playerLobbyMovedDuringDelay = false;
                         plugin.removePlayerTeleport(player);
                         if (plugin.getMainLobbyConfigManager().isCooldownEnabled()) {

@@ -118,7 +118,7 @@ public class LobbyCmd implements CommandExecutor {
                     return;
                 }
 
-                bungeeMessagingManager.sendToServer(sender, targetPlayer, serverName, true);
+                bungeeMessagingManager.sendToServer(targetPlayer, serverName);
             }
         } else {
             m.sendMessage(Bukkit.getConsoleSender(), msg.getLobbyInvalidMode()
@@ -132,6 +132,7 @@ public class LobbyCmd implements CommandExecutor {
         boolean isOther = false;
         boolean isMultiple = lobbyC.isMultipleLobbies();
         String lobbyMode = lobbyC.getLobbyMode();
+        boolean isProxyMode = lobbyMode.equalsIgnoreCase("proxy");
 
         boolean isLobbyOtherHasPermission = PlayerUtils.hasPermission(plugin, sender, perm.getLobbyOther(), perm.isLobbyOtherDefault(), false);
         boolean isBypassCooldownPermission = PlayerUtils.hasPermission(plugin, sender, perm.getLobbyBypassCooldown(), perm.isLobbyBypassCooldownDefault(), false);
@@ -166,7 +167,7 @@ public class LobbyCmd implements CommandExecutor {
                     isOther = true;
                 }
             }
-        } else if (lobbyMode.equalsIgnoreCase("proxy")) {
+        } else if (isProxyMode) {
             if (isLobbyOtherHasPermission && args.length > 0) {
                 targetPlayerName = args[0];
                 isOther = true;
@@ -187,13 +188,15 @@ public class LobbyCmd implements CommandExecutor {
         FileManager fileManager = new FileManager(lobbyName + ".yml", "data/lobbies", false, plugin);
         FileConfiguration lobby = fileManager.getConfig();
 
-        if (!FileUtils.exist(plugin, "lobbies", lobbyName)) {
-            m.sendMessage(sender, msg.getLobbyNotExists().replace("%lobby%", lobbyName), true);
-            return;
-        }
+        if (!isProxyMode){
+            if (!FileUtils.exist(plugin, "lobbies", lobbyName)) {
+                m.sendMessage(sender, msg.getLobbyNotExists().replace("%lobby%", lobbyName), true);
+                return;
+            }
 
-        lobbyActionsManager = new ActionsManager(plugin, lobby, "teleport_actions");
-        lobbyConditionsManager = new ConditionsManager(plugin, lobby, "teleport_conditions");
+            lobbyActionsManager = new ActionsManager(plugin, lobby, "teleport_actions");
+            lobbyConditionsManager = new ConditionsManager(plugin, lobby, "teleport_conditions");
+        }
 
         Player targetPlayer = Bukkit.getPlayer(targetPlayerName);
         if (!PlayerUtils.isOnline(plugin, sender, targetPlayer, false)) {
@@ -214,14 +217,14 @@ public class LobbyCmd implements CommandExecutor {
                 DelayHandler.lobby(plugin, targetPlayer, delayManager, lobbyName);
             }
             actionsManager.general("before_delay", targetPlayer);
-            lobbyActionsManager.general("before_delay", targetPlayer);
+            if (lobbyActionsManager != null) lobbyActionsManager.general("before_delay", targetPlayer);
             if (defaultMessages) m.sendMessage(targetPlayer, msg.getLobbyDelayInTeleport(), true);
             return;
         }
 
         if (lobbyMode.equalsIgnoreCase("proxy")) {
             BungeeMessagingManager bungeeMessagingManager = new BungeeMessagingManager(plugin);
-            bungeeMessagingManager.sendToServer(sender, player, lobbyC.getSenderServer(), isOther);
+            bungeeMessagingManager.sendToServer(player, lobbyC.getSenderServer());
         } else if (lobbyMode.equalsIgnoreCase("server")) {
             location = LocationUtils.getDestinationPlace(plugin, player, "lobby", lobbyName);
             if (location == null) return;
@@ -234,7 +237,7 @@ public class LobbyCmd implements CommandExecutor {
             }
 
             actionsManager.general("none", targetPlayer);
-            lobbyActionsManager.general("none", targetPlayer);
+            if (lobbyActionsManager != null) lobbyActionsManager.general("none", targetPlayer);
             if (defaultMessages) m.sendMessage(sender, msg.getLobbyTeleporting(), true);
         } else {
             m.sendMessage(sender, msg.getLobbyOtherTeleported()

@@ -224,6 +224,11 @@ public class DeluxeTeleport extends JavaPlugin {
         if (!messagesEn.exists()){
             saveResource("lang/en-EN/messages.yml", false);
         }
+
+        File messagesZh = new File(langFolder + "/zh-CN", "messages.yml");
+        if (!messagesEn.exists()){
+            saveResource("lang/zh-CN/messages.yml", false);
+        }
     }
 
     public void registerMenus() {

@@ -24,42 +24,12 @@
 # https://discord.com/invite/gcGarEbbbb                                              #
 #====================================================================================#
 
-# Here you can configure some things about updates
-update_config:
-  # If this option is set to true, players with permission deluxeteleport.notify.update permission
-  # will be notified (this option does not exclude console notifications)
-  # I recommend leaving this option by default
-  notify: true
-
-  # This indicates whether when entering the server the player with the appropriate permission
-  # will receive a notification with the changelog of a new update.
-  changelog_notify: true
-
-  auto_update:
-    # If this option is true, every time a new version is available it will be
-    # downloaded automatically when the server is turned on.
-    enabled: true
-    # Time interval to check for new updates while the server is on (leave at 0 to disable)
-    check_interval: 6h
-
-    restart:
-      # If this is set to true every time a new update is downloaded the server will be restarted
-      enabled: true
-      # If this setting is true and restart.enabled is true, downloading an update while the server is on will not restart.
-      only_on_start: true
-
-  # If this is true if missing configuration is detected in the configuration files it will be updated
-  # automatically (this does not affect existing configurations, new ones are simply added)
-  # WARNING: If you disable this you are likely to receive errors after an update, I recommend that you leave it enabled
-  update_configs: true
-  update_messages: true
-  update_permissions: true
-
 # Select here the message file to be used
 # Available languages:
 #
 # en-EN - English
 # es-ES - Español
+# zh-CN - 简体中文 (Simplified Chinese)
 lang: en-EN
 
 # Here you can change/replace some messages
@@ -203,3 +173,34 @@ teleport_on_respawn:
 
   teleport_actions:
     actions: [ ]
+
+# Here you can configure some things about updates
+update_config:
+  # If this option is set to true, players with permission deluxeteleport.notify.update permission
+  # will be notified (this option does not exclude console notifications)
+  # I recommend leaving this option by default
+  notify: true
+
+  # This indicates whether when entering the server the player with the appropriate permission
+  # will receive a notification with the changelog of a new update.
+  changelog_notify: true
+
+  auto_update:
+    # If this option is true, every time a new version is available it will be
+    # downloaded automatically when the server is turned on.
+    enabled: true
+    # Time interval to check for new updates while the server is on (leave at 0 to disable)
+    check_interval: 6h
+
+    restart:
+      # If this is set to true every time a new update is downloaded the server will be restarted
+      enabled: true
+      # If this setting is true and restart.enabled is true, downloading an update while the server is on will not restart.
+      only_on_start: true
+
+  # If this is true if missing configuration is detected in the configuration files it will be updated
+  # automatically (this does not affect existing configurations, new ones are simply added)
+  # WARNING: If you disable this you are likely to receive errors after an update, I recommend that you leave it enabled
+  update_configs: true
+  update_messages: true
+  update_permissions: true
