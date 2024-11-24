@@ -1,0 +1,241 @@
+#====================================================================================#
+#                     __  __  ____  ___  ___    __    ___  ____  ___                 #
+#                   (  \/  )( ___)/ __)/ __)  /__\  / __)( ___)/ __)                 #
+#                    )    (  )__) \__ \\__ \ /(__)\( (_-. )__) \__ \                 #
+#                   (_/\/\_)(____)(___/(___/(__)(__)\___/(____)(___/                 #
+#                                                                                    #
+# 此为本插件的简体中文译文存档                                                         #
+# 你可以在这里找到消息文本的有关描述及更多翻译:                                          #
+# https://wiki.pixesoj.com/en/deluxeteleport/settings/messages                       #
+#                                                                                    #
+# 如果你想要任何新功能, 或是想要问些问题, 欢迎前往我的 Discord 聊天群组:                  #
+# https://discord.com/invite/gcGarEbbbb                                              #
+#====================================================================================#
+
+prefix:
+  global: "&bDeluxeTeleport &8» "
+  lobby: "&bLobby &8» "
+  spawn: "&bSpawn &8» "
+  tpa: "&bTPA &8» "
+  home: "&bHome &8» "
+
+global:
+  player_offline: "&c玩家 &b%player% &c不在线."
+  invalid_arguments: "&c参数无效, 命令用法: &a%usage%"
+  not_executed_in_proxy: "&c该服尚未处于群组模式."
+  in_cooldown: "&c你需要再等待 &b%time% &c秒才可使用该命令."
+  dependency_found: "&a已发现依赖: &b%dependency%"
+  unknown_software: "未知服务端核心."
+  permission_denied: "&c你需要权限 &b%permission% &c才可这么做."
+  console_denied: "&c该命令只能由玩家执行."
+  null_sound: "&c声音不能为空."
+  invalid_sound: "&6%sound% &c不是有效的声音."
+  server_not_exists: "&c服务器 &b%server% &c不存在."
+  reload: "&a所有配置文件已重载至版本 &aV%version%. &8(&7%time%&8)"
+  version: "&f当前 &bDeluxeTeleport &f版本为 &aV%version% &8(&7最新版本为 &a%last_version%&8)."
+  usage: "&7请输入命令 &a/dt help &7获取帮助."
+  specify_player: "&c请指定玩家名称."
+  in_teleport: "&c你已经在传送了."
+  updated_config: "&a完成! 配置文件 &b%config% &a已更新!"
+  updating_config: "&a正在将配置文件 &b%config% &a更新至最新版..."
+  help:
+    - "&bDeluxeTeleport &8- &a帮助页面"
+    - " "
+    - "&a/deluxeteleport version &8- &7浏览插件版本."
+    - "&a/deluxeteleport update &8- &7更新至最新版本."
+    - "&a/deluxeteleport reload &8- &7重载配置."
+    - "&a/deluxeteleport help &8- &7显示本帮助消息."
+
+variables:
+  enabled: "&a启用"
+  disabled: "&c禁用"
+  unlimited: "&a不限"
+  seconds: 秒
+  minutes: 分
+  hours: 时
+  days: 天
+
+migrate:
+  error_plugin_not_specified: "&c你需要选择待导入数据的插件. &a可导入的插件: &7%compatible_plugins%"
+  error_invalid_plugin: "&c%plugin% 不是可导入数据的插件. &a可导入的插件: &7%compatible_plugins%"
+  error_data_not_specified: "&c你需要选择待导入的数据内容. &a可导入的数据类型: &7%compatible_data%"
+  error_invalid_data: "&c%data% 不是可导入的数据类型. &a可导入的数据类型: &7%compatible_data%"
+
+reset:
+  error_unspecified_value: "&c你需要先指定待重置的值. &a可用值: &7%available_values%"
+  error_invalid_value: "&c%value% 不是有效值. &a可用值: &7%available_values%"
+  unspecified_player: "&c你需要指定重置 %value% 值的玩家名称"
+  successfully: "&a正在重置玩家 %player% 的值 %value%..."
+
+mysql:
+  error_connecting: "&c连接至 MySQL 出现错误: 连接已存在."
+  error_tables: "&c检查或创建 MySQL 数据表时出现错误."
+  successfully_tables: "&a数据表创建成功."
+  error: "&aMySQL 连接出现错误."
+  connected: "&aDeluxeTeleport 已成功连接至 MySQL."
+
+update:
+  error_check: "&c检查更新失败: %error%."
+  is_empty: "&c新版本为空."
+  update_available: "&a有更新可用! &8(&b%latest_version%&8)."
+  its_updated: "&a你已更新! &8(&b%latest_version%&8)."
+  jar_not_found: "&c无法找到旧版本的插件文件! 请确认其名称为: &b%jar_name%."
+  downloaded: "&a正在下载新版本..."
+  unable_to_deleted: "&c删除旧版本插件文件失败! 请在下次重启前手动将其删除."
+  response_code: "&c响应代码为: &b%code%."
+  looking: "&b正在检查更新..."
+  new_update:
+    - "&8(&b&l%prefix%&8) &c新版本可用. &e(&7%last_version%&e)"
+    - "&c输入命令 &a/deluxeteleport update &c可开始下载更新"
+    - "&c你也可以在此处手动下载: &f%plugin_url%"
+  changelog_invalid_format: "&c版本格式无效. 请以 x.x.x 为格式 (如 2.1.0)."
+  changelog_disabled_notify: "&c你已禁用 %version% &C的更新消息提醒."
+  changelog_enabled_notify: "&a你已启用 %version% &a的更新消息提醒."
+  changelog_invalid_page: "&c无效页码. 正在显示第 1 页."
+  changelog_no_changelogs_found: "&c获取版本 &b%version% &c的更新日志失败."
+  changelog_error_info: "&c获取版本 %version% 时出错. 请稍后再试."
+  changelog_exeption: "&c处理请求时遇到错误."
+  changelog_pages: "&7页码: %page_number%&8/&7%total_pages%"
+  changelog_pages_console: "&7第 %page_number%&8/&7%total_pages% 页&8(&7/deluxeteleport changelog page&8)"
+  changelog_register: "&a版本 &b%version%&a 更新日志:"
+  changelog_see_full: "&b&l浏览全文"
+  changelog_see_full_description: "&b点击浏览完整更新日志."
+  changelog_ok: "&e&l了解"
+  changelog_ok_description: "&e不要再次显示该版本的更新信息."
+  changelog_next: "&a&l下一页"
+  changelog_next_description: "&a点击翻到下一页."
+  changelog_previus: "&c&l上一页"
+  changelog_previus_description: "&c点击翻回上一页."
+
+lobby:
+  not_allowed: "&c大厅尚未启用."
+  invalid_type: "&c在 lobby.yml 中指定的大厅类型 &8(&7%type%&8) &c无效."
+  invalid_mode: "&c大厅模式 &b%mode% &c无效, 正在使用 &b%modes% &c模式."
+  other_teleported: "&a已将玩家 &b%player% &a传送至大厅."
+  other_teleport: "&a你已被 &b%sender% &a传送至大厅."
+  in_cooldown: "&c你需要再等待 &b%lobby_cooldown_formatted% &c才可前往大厅."
+  insufficient_money: "&c你需要 &a$%money%/%current_money% &c进行传送."
+  discounted_money: "&f&$%money% &f已从你的账户中支出."
+  teleporting: "&a正在传送至大厅..."
+  established: "&a大厅 &b%lobby% &a已成功设置在世界 &b%world%."
+  not_exists: "&c大厅 &b%lobby% &c不存在."
+  in_teleport: "&c你已发出传送至大厅的请求."
+  delay_in_teleport: "&a将在 &e%lobby_delay_time_formatted%&a 内传送至大厅."
+  canceled_move: "&c你移动了, 已取消传送至大厅的请求."
+  deleted_successfully: "&a大厅 &b%lobby% &a已被成功删除."
+  deleted_error: "&c你需要指定待删除的大厅."
+
+spawn:
+  not_allowed: "&c主城功能未启用."
+  not_exists: "&c主城 &b%spawn% &c不存在."
+  invalid_type: "&c在 lobby.yml 中指定的大厅类型 &8(&7%type%&8) &c无效."
+  other_teleported: "&a已将 &b%player% &a传送至主城."
+  other_teleport: "&a你已被 &b%sender% &a传送至主城."
+  in_cooldown: "&c你需要再等待 &b%spawn_cooldown_formatted% &c才可前往主城."
+  teleporting: "&a正在传送至主城..."
+  canceled_move: "&c你移动了, 已取消传送至主城的请求."
+  delay_in_teleport: "&a将在 &e%spawn_delay_time_formatted%&a 内传送至主城."
+  in_teleport: "&c你已发出传送至主城的请求."
+  insufficient_money: "&c你需要 &a$%money%/%current_money% &c进行传送."
+  discounted_money: "&f&$%money% &f已从你的账户中支出."
+  established: "&a主城已成功设置在世界 &b%world%."
+  deleted_canceled: "&6确认已超时. 主城删除请求已取消."
+  deleted_successfully: "&a主城 &b%spawn% &a已被成功删除."
+  deleted_error: "&c你需要指定待删除的主城."
+  no_spawns: "&c此处没有主城."
+  spawns_list: "&a主城: &f%spawns%"
+  exeption: "&c该主城未正确设置."
+
+tpa:
+  not_allowed: "&c该服务器未启用 tpa 功能."
+  specify_player: "&c请先指定玩家名称."
+  himself: "&c你不能对自己发出传送请求."
+  blocked: "&c该玩家拒绝接受任何传送请求."
+  pending: "&c你已经发出了一个传送请求."
+  pending_request: "&c该玩家还有待处理的传送请求."
+  send: "&a已向玩家 &b%player% &a发出传送请求."
+  teleport_defeated: "&c已取消向玩家 &b%player% &c发出的传送请求."
+  teleport_defeated_targetplayer: "&c传送请求已过期."
+  toggle_yes: "&a你已重新接收传送请求."
+  toggle_no: "&c你已停止接收传送请求."
+  toggle_other: "&a玩家 &b%player% &a的传送请求正在 &b%status%&a."
+  toggle_other_targetplayer: "&b%player% &a切换了你的传送请求状态."
+  deny: "&c玩家 &b%player% &c拒绝了你的传送请求."
+  deny_targetplayer: "&b%player% &c强制拒绝了你正在处理的传送请求."
+  cancel: "&c玩家 &b%player% &c取消了传送请求."
+  cancel_targetplayer: "&b%player% &c强制取消了你正在处理的传送请求."
+  no_requests: "&c尚无待处理的传送请求"
+  no_requests_player: "&c你没有来自玩家 &b%player% &c的传送请求."
+  delay_in_teleport: "&a将在 &e%tpa_delay_time_formatted%&a 内传送."
+  teleporting: "&a正在传送至 &b%player%..."
+  teleport: "&a你已被传送至 &b%player%."
+  teleport_targetplayer: "&b%player% &a已传送到你的位置."
+  canceled_move: "&c你移动了, 传送已取消."
+  in_cooldown: "&c你必须等待 &b%tpa_cooldown_formatted% &c才能再次发起传送请求."
+  player_in_teleport: "&c你不能一次接受多个传送请求."
+  target_player_in_teleport: "&b%player% &c当前正在传送."
+  tpa_request:
+    - " "
+    - "&a你收到了来自玩家 &b%player% &a的传送请求."
+    - "&8[&4!&8] &c&l警告"
+    - "&7请不要随意接受陌生玩家的传送请求."
+    - " "
+  tpa_geyser_request:
+    - " "
+    - "&a你收到了来自玩家 &b%player% &a的传送请求."
+    - "&8[&4!&8] &c&l警告 &8» &7小心，不要接受陌生玩家的传送请求."
+    - "&7输入命令 &a/tpaccept &7接受传送请求, 或 &a/tpdeny &7拒绝传送请求."
+    - " "
+  tpa_here_request:
+    - " "
+    - "&a你已向 &b%player% &a发出传送至此的请求."
+    - "&8[&4!&8] &c&l警告"
+    - "&7请不要随意接受陌生玩家的传送请求."
+    - " "
+  tpa_here_geyser_request:
+    - " "
+    - "&a你收到了 &b%player% &a传送至你位置的请求."
+    - "&8[&4!&8] &c&l警告 &8» &7请不要随意接受陌生玩家的传送请求."
+    - "&7输入命令 &a/tpaccept &7接受传送请求, 或 &a/tpdeny &7拒绝传送请求."
+    - " "
+  click_accept: "&a&l同意"
+  click_cancel: "&c&l拒绝"
+  click_accept_description: "&a点击同意传送请求."
+  click_cancel_description: "&c点击拒绝传送请求."
+
+home:
+  not_allowed: "&c家传送点功能已在该服务器上被禁用."
+  not_exists: "&c家传送点 &b%home% &c不存在."
+  exists: "&c你已设置了相同名称的家传送点."
+  deleted_error: "&c你必须指定要删除的家传送点名称."
+  deleted_successfully: "&6家传送点 &b%home% &6已被成功删除."
+  not_specify: "&c请先指定家传送点."
+  teleporting: "&a正在传送至 &b%home%."
+  set_error: "&c请指定家传送点的名称."
+  set_successfully: "&a你已成功设置家传送点 &b%home%&a."
+  max_count: "&c你不能再设置更多家传送点了."
+  delay_in_teleport: "&a将在 &e%home_delay_time_formatted%&a 内传送."
+  canceled_move: "&c你移动了, 传送已取消."
+  in_cooldown: "&c你必须等待 &b%home_cooldown_formatted% &c才可传送至家传送点."
+  has_no_homes: "&c%player% 尚未设置任何家传送点."
+  no_homes: "&c你尚未设置家传送点."
+  homes_of: "&a玩家 %player% 设置的家传送点: "
+  your_homes: "&a你设置的家传送点: "
+
+warp:
+  not_allowed: "&c地标功能尚未在服务器上启用."
+  not_exists: "&c地标 &b%warp% &c不存在."
+  deleted_error: "&c你必须指定要删除的地标传送点名称."
+  deleted_successfully: "&6地标 &b%warp% &6已被成功删除."
+  teleporting: "&a正在传送至 &b%warp%."
+  set_error: "&c请指定地标的名称."
+  set_successfully: "&a已成功设置地标 &b%warp%&a."
+  delay_in_teleport: "&a将在 &e%warp_delay_time_formatted%&a 内删除."
+  canceled_move: "&c你移动了, 传送已取消."
+  in_cooldown: "&c你必须等待 &b%warp_cooldown_formatted% &c才可传送至地标."
+  not_specify: "&c你必须指定一个地标."
+  exeption: "&c地标 &%warp% &c的设置不正确."
+  other_teleported: "&a成功将玩家 &b%player% &a传送至地标 &b%warp%&a."
+  other_teleport: "&a你被玩家 &b%sender% &a传送至了地标 &b%warp%&a."
+  no_warps: "&c尚无地标."
+  warps_list: "&a地标: &f%warps%"
