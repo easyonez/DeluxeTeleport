@@ -159,6 +159,7 @@ public class TabCompleterManager implements TabCompleter {
                     completions.add("all");
                     completions.add("homes");
                     completions.add("warps");
+                    completions.add("spawn");
                 }
 
                 String partialInput = args[2].toLowerCase();

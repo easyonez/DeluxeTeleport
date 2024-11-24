@@ -20,6 +20,7 @@ public class ImportManager {
     public static void importEssentialsAll(DeluxeTeleport plugin, CommandSender sender) {
         MessagesFileManager msg = plugin.getMainMessagesManager();
         MessagesManager m = new MessagesManager(msg.getPrefix(), plugin);
+
         m.sendMessage(sender, "&aStarting import of Essentials homes...", true);
         importEssentialsHomes(plugin, sender);
 
@@ -28,6 +29,14 @@ public class ImportManager {
             public void run() {
                 m.sendMessage(sender, "&aStarting import of Essentials warps...", true);
                 importEssentialsWarps(plugin, sender);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        m.sendMessage(sender, "&aStarting import of Essentials spawn...", true);
+                        importEssentialsSpawn(plugin, sender);
+                    }
+                }.runTaskLater(plugin, 60L);
             }
         }.runTaskLater(plugin, 60L);
     }
@@ -90,7 +99,7 @@ public class ImportManager {
                                     if (sender instanceof Player) {
                                         Player player = (Player) sender;
 
-                                        ActionBarAPI.sendActionBar(player, format);
+                                        ActionBarAPI.sendActionBar(plugin, player, format, 60);
                                     } else {
                                         m.sendMessage(sender, format, false);
                                     }
@@ -169,7 +178,7 @@ public class ImportManager {
                                 percentage, progressBar, importedWarps, totalFiles);
                         if (sender instanceof Player) {
                             Player player = (Player) sender;
-                            ActionBarAPI.sendActionBar(player, format);
+                            ActionBarAPI.sendActionBar(plugin, player, format, 60);
                         } else {
                             m.sendMessage(sender, format, false);
                         }
@@ -193,6 +202,58 @@ public class ImportManager {
             ActionBarAPI.sendActionBar(plugin, player, finalMessage, 100);
         } else {
             m.sendMessage(sender, finalMessage, false);
+        }
+    }
+
+    public static void importEssentialsSpawn(DeluxeTeleport plugin, CommandSender sender) {
+        MessagesFileManager msg = plugin.getMainMessagesManager();
+        MessagesManager m = new MessagesManager(msg.getPrefix(), plugin);
+        File spawnFile = new File("plugins/Essentials/spawn.yml");
+
+        if (!spawnFile.exists() || spawnFile.isDirectory()) {
+            m.sendMessage(sender, "No data to import.", true);
+            return;
+        }
+
+        long startTime = System.currentTimeMillis();
+
+        try {
+            YamlConfiguration spawnConfig = YamlConfiguration.loadConfiguration(spawnFile);
+            FileManager fileManager = new FileManager("general-spawn.yml", "data/spawns", plugin);
+            FileConfiguration spawn = fileManager.getConfig();
+
+            String worldName = spawnConfig.getString("spawns.default.world-name");
+            spawn.set("world", spawnConfig.getString("spawns.default.world"));
+            spawn.set("world_name", worldName);
+            spawn.set("x", spawnConfig.getDouble("spawns.default.x"));
+            spawn.set("y", spawnConfig.getDouble("spawns.default.y"));
+            spawn.set("z", spawnConfig.getDouble("spawns.default.z"));
+            spawn.set("yaw", spawnConfig.getDouble("spawns.default.yaw"));
+            spawn.set("pitch", spawnConfig.getDouble("spawns.default.pitch"));
+            spawn.set("displayname", "general-spawn");
+            spawn.set("lastowner", "");
+            spawn.set("is_main", true);
+            if (spawn.getConfigurationSection("teleport_actions.actions") == null){
+                spawn.set("teleport_actions.actions", new ArrayList<>());
+            }
+            if (spawn.getConfigurationSection("teleport_conditions.conditions") == null){
+                spawn.set("teleport_conditions.conditions", new ArrayList<>());
+            }
+            fileManager.saveConfig();
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+            String finalMessage = String.format(
+                    "&8[&aSpawn&8] &bEssentials &8▶ &bDeluxeTeleport &7• &aImport completed in %d ms.", elapsedTime);
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                ActionBarAPI.sendActionBar(plugin, player, finalMessage, 60);
+            } else {
+                m.sendMessage(sender, finalMessage, false);
+            }
+
+        } catch (Exception e) {
+            m.sendMessage(sender, "Error importing spawn file.", true);
+            e.printStackTrace();
         }
     }
 }

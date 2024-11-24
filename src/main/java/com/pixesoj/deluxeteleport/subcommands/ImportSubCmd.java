@@ -48,8 +48,11 @@ public class ImportSubCmd implements SubCommand {
         } else if (args[1].equalsIgnoreCase("warps")) {
             ImportManager.importEssentialsWarps(plugin, sender);
             return true;
+        } else if (args[1].equalsIgnoreCase("spawn")) {
+            ImportManager.importEssentialsSpawn(plugin, sender);
+            return true;
         } else {
-            m.sendMessage(sender, msg.getMigrateErrorInvalidData().replace("%compatible_data%", "Homes, Warps")
+            m.sendMessage(sender, msg.getMigrateErrorInvalidData().replace("%compatible_data%", "Homes, Warps, Spawn - (All)")
                     .replace("%data%", args[1]), true);
         }
 
