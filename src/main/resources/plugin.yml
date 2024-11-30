@@ -1,7 +1,7 @@
 main: com.pixesoj.deluxeteleport.DeluxeTeleport
 website: https://wiki.pixesoj.com/deluxeteleport/
-version: 2.5.3
+version: 2.5.4
 name: DeluxeTeleport
-author: Pixesoj
 api-version: 1.13
-load: STARTUP
+author: ["Pixesoj"]
+softdepend: ["PlaceholderAPI", "Floodgate", "Vault", "LuckPerms"]

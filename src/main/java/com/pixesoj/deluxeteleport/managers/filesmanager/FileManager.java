@@ -80,7 +80,7 @@ public class FileManager {
             try {
                 fileConfiguration.save(file);
             } catch (IOException e) {
-                plugin.getLogger().severe("No se pudo guardar el archivo: " + file.getPath());
+                plugin.getLogger().severe("Failed to save file: " + file.getPath());
                 e.printStackTrace();
             }
         }

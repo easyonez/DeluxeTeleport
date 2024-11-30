@@ -170,7 +170,7 @@ public class ConditionsManager {
 
                     ActionsManager actionsManager;
                     if (conditionMet) {
-                        actionsManager = new ActionsManager(plugin, config, conditionsPath + ".conditions." + key + ".succes_actions");
+                        actionsManager = new ActionsManager(plugin, config, conditionsPath + ".conditions." + key + ".success_actions");
                     } else {
                         actionsManager = new ActionsManager(plugin, config, conditionsPath + ".conditions." + key + ".deny_actions");
                     }

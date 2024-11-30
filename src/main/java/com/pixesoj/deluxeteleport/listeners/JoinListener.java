@@ -63,7 +63,7 @@ public class JoinListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void teleportOnJoin (PlayerJoinEvent event){
         ConfigManager config = plugin.getMainConfigManager();
         Player player = event.getPlayer();
@@ -73,7 +73,7 @@ public class JoinListener implements Listener {
                 if (!conditionsManager.isCondition(player)) return;
                 Location location = LocationUtils.getDestinationPlace(plugin, player, config.getTeleportOnJoinDestinationPlace(), config.getTeleportOnJoinDestination());
                 if (location == null) return;
-                Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 5L);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 15L);
                 ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_join.teleport_actions");
                 actionsManager.general("none", player);
             }
@@ -83,7 +83,7 @@ public class JoinListener implements Listener {
                 if (!conditionsManager.isCondition(player)) return;
                 Location location = LocationUtils.getDestinationPlace(plugin, player, config.getTeleportOnFirstJoinDestinationPlace(), config.getTeleportOnFirstJoinDestination());
                 if (location == null) return;
-                Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 5L);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(location), 15L);
                 ActionsManager actionsManager = new ActionsManager(plugin, config.getConfig(), "teleport_on_join.only_first_join.teleport_actions");
                 actionsManager.general("none", player);
             }
